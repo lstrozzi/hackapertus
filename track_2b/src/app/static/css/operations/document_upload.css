@@ -1,0 +1,13 @@
+.document-upload .upload-dropzone {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 112px;
+  padding: 18px;
+  border: 1px dashed #6b8191;
+  background: #f5f8fa;
+  cursor: pointer;
+}
+.document-upload .upload-mark { font-size: 28px; color: #356b77; }
+.document-upload input[type="file"] { display: none; }
+.document-upload .upload-dropzone small { display: block; margin-top: 5px; color: #52616a; }

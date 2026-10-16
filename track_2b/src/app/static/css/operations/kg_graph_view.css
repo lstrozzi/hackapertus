@@ -1,0 +1,16 @@
+/* Graph tab: full-width viewer (a canvas, not a box). Mirrors the operation-box
+   chrome — the toolbar uses the same select/button look as the extraction box, the
+   status pill reuses .operation-status from the shared styles. */
+.kg-graph-view { display: flex; flex-direction: column; gap: 12px; }
+.kg-graph-toolbar { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; background: #fff; border: 1px solid #d6dfe2; border-radius: 6px; padding: 10px 14px; }
+.kg-graph-control { display: flex; gap: 8px; align-items: center; }
+.kg-graph-control label { font-size: .82rem; color: #45575e; }
+.kg-graph-control select { min-height: 34px; min-width: 200px; border: 1px solid #cbd4d8; border-radius: 4px; background: #fff; color: #20242b; padding: 4px 8px; }
+.kg-graph-toolbar button { min-height: 34px; border: 1px solid #356b77; border-radius: 4px; background: #356b77; color: #fff; font: 600 .84rem system-ui, sans-serif; padding: 0 14px; cursor: pointer; }
+.kg-graph-toolbar button[disabled] { opacity: .55; cursor: default; }
+.kg-graph-status { margin-left: auto; }
+.kg-graph-canvas { position: relative; height: min(660px, 72vh); background: #fbfdfd; border: 1px solid #d6dfe2; border-radius: 6px; overflow: hidden; }
+.kg-graph-canvas .kg-graph-message { position: absolute; inset: 0; display: grid; place-items: center; text-align: center; color: #45575e; font-size: .9rem; padding: 0 24px; }
+.kg-graph-footer { background: #fff; border: 1px solid #d6dfe2; border-radius: 6px; padding: 8px 14px; font-size: .84rem; color: #3c4f57; min-height: 20px; }
+.kg-graph-footer .kg-graph-sel-label { font-weight: 600; color: #2f5a6e; }
+.kg-graph-footer .kg-graph-sel-type { color: #594c78; font-weight: 600; }

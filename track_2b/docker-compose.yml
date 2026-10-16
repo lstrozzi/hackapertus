@@ -1,0 +1,127 @@
+# Docker compose for the submission project (invoked by the root Makefile).
+#
+#   make run              Plan Local: app + official Thalabus platform stack (overlay file)
+#   make run PLAN=SaaS    Plan SaaS: app only, THALABUS_BASE_URL points at a running instance
+#
+# Plan Local starts the two real retrieval model services from its overlay; Plan SaaS does not.
+#
+# The app container is identical in both plans (docs/RUN_PLANS.md); Plan Local loads the
+# platform services and Plan SaaS loads LLM defaults from docker-compose.plan-saas.yml.
+#
+# Configuration contract: every non-secret value is a literal in these YAML files, so no
+# shell variable or stray .env line can silently redirect a service. .env carries secrets
+# ONLY (see .env.example) and is excluded from distribution; it is read once, at container
+# creation (`up`/`create`), so changing a secret takes `make run`, never `docker restart`.
+
+services:
+  app:
+    build: ./src
+    image: hackapertus-submission:latest
+    # Needed for the guided flow's restart button (/api/admin/restart): the app cannot
+    # reach the Docker socket from inside, so it ends its own process and Docker starts
+    # the container again — the same mechanism a crash uses. `unless-stopped` rather than
+    # `always` so an intentional `make down` stays down.
+    # Note what a restart does and does not reload: the environment is read when the
+    # container is created, so editing .env still needs `make run` to recreate it.
+    restart: unless-stopped
+    ports:
+      - "${PORT:-8000}:8000"
+    # The platform dials the Engine API at this hostname; the guided flow's fifth screen
+    # asks the very same address the platform is configured with, so the app resolves it
+    # the same way the platform service does. host-gateway is Docker's name for the host's
+    # bridge address -- the one route a host firewall decides.
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      # Endpoint defaults shared by both plans: Plan SaaS repeats such literals in its
+      # overlay, Plan Local overrides them with platform-local values in its own.
+      LLM_NAME: apertus-1.5-70b
+      LLM_BASE_URL: https://llm.thalabus.ai/v1
+      # Secret (.env): bearer token for the endpoint above.
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      # Run plan (docs/RUN_PLANS.md). Plan overlays declare this as a literal, so the
+      # file that is loaded decides the plan and beats .env; this literal applies only
+      # when no overlay is loaded (`docker compose -f docker-compose.yml up`, or
+      # `make run` on the Makefile's own fallback for PLAN=local).
+      THALABUS_PLAN: local
+      THALABUS_BASE_URL: ${THALABUS_BASE_URL:-}
+      THALABUS_UI_URL: ${THALABUS_UI_URL:-}
+      THALABUS_TOKEN: ${THALABUS_TOKEN:-}
+      # Own graph store: literal, so nothing outside these YAML files can redirect it.
+      # A distributed checkout without a .env always lands on the `graph` container
+      # compose owns; the SaaS overlay overrides this literal to reach a database
+      # published on the host instead (docs/RUN_PLANS.md).
+      NEO4J_URI: bolt://graph:7687
+      NEO4J_USER: neo4j
+      NEO4J_DATABASE: neo4j
+      # Secret (.env): doubles as the `graph` service's own auth below, so one value
+      # keeps the container and the app's login in step.
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-hackathon-2026}
+      # The Engine address pair the platform itself uses -- same names on purpose, so one
+      # value configures the platform's own container-spawning path and this app's test of
+      # it. The pass-through strings stay exactly because `make verify` pins this line
+      # against the platform's compose file; set them in .env only for a non-default Engine.
+      # Never dialed under Plan SaaS: the step is ruled out by the plan there.
+      DOCKER_ENGINE_ADDR: ${DOCKER_ENGINE_ADDR:-host.docker.internal}
+      DOCKER_ENGINE_PORT: ${DOCKER_ENGINE_PORT:-2375}
+      DOCKER_ENGINE_CONTROL_ENABLE: false
+      # The two retrieval services, asked about by the guided flow's third screen: literals
+      # naming this stack's own services. The SaaS overlay overrides all four with its
+      # remote routes. Under Plan SaaS these defaults are never contacted regardless —
+      # the remote platform runs its own retrieval.
+      EMBEDDINGS_URL: http://embeddings:8354/v1
+      EMBEDDINGS_MODEL: Qwen/Qwen3-Embedding-0.6B
+      RERANKER_URL: http://reranker:8364/v1
+      RERANKER_MODEL: BAAI/bge-reranker-v2-m3
+      SAMPLE_DIR: /app/data/sample
+    volumes:
+      - ./data:/app/data
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0) if urllib.request.urlopen('http://127.0.0.1:8000/api/health', timeout=3).status==200 else sys.exit(1)"]
+      interval: 15s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+  # The application's own graph store: a database rather than a file store, because
+  # the submission reasons over connected records — and the same component the
+  # platform itself runs, which is why one access layer (src/app/graphstore/neo4j.py)
+  # serves both plans. Unmodified upstream image, no platform code.
+  #
+  # Named 'graph' on purpose. docker-compose.plan-local.yml defines a service named
+  # 'neo4j' for the platform's database; a second service with that name would merge
+  # into it instead of sitting beside it, so this one keeps its own name and its own
+  # DNS name for the app.
+  graph:
+    image: ${NEO4J_IMAGE:-neo4j:5-community}
+    container_name: hackathon-neo4j
+    environment:
+      # Doubled underscores are required, not decoration: NEO4J_ settings map to
+      # neo4j.conf by turning every underscore into a dot, so a setting whose real
+      # name contains one (server.default_listen_address, server.memory.heap.*) has
+      # to double it. The platform's own image does the same (DockerImage_Neo4j).
+      # Neo4j binds 127.0.0.1 by default, which inside a container means nobody.
+      NEO4J_server_default__listen__address: "0.0.0.0"
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-hackathon-2026}
+      # Kept small so the demo coexists with a developer stack, and explicit: Neo4j
+      # validates its configuration strictly, so an undeclared setting is fatal at
+      # start-up rather than silently ignored.
+      NEO4J_server_memory_heap_initial__size: 256M
+      NEO4J_server_memory_heap_max__size: 512M
+      NEO4J_server_memory_pagecache_size: 256M
+    volumes:
+      - graph-data:/data
+    healthcheck:
+      test: ["CMD", "neo4j", "status"]
+      interval: 15s
+      timeout: 10s
+      start_period: 45s
+      retries: 4
+    # No published port: the app reaches this over the compose network, which is
+    # also why the GUI is the connectivity test. To browse it instead, add
+    #   ports: ["127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"]
+    # or query it in place:
+    #   docker compose exec graph cypher-shell -a bolt://localhost:7687 -u neo4j
+
+volumes:
+  graph-data:

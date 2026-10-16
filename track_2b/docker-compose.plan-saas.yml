@@ -1,0 +1,55 @@
+# SaaS plan: the model services are the remote SaaS endpoints, but this file is the
+# laptop development profile — the graph store and the platform run on the host of the
+# machine running this stack, reached via host.docker.internal (127.0.0.1 inside the
+# container is its own loopback, and the LAN IP would hairpin the host firewall).
+# To run against a real remote deployment instead, change the three literals NEO4J_URI,
+# THALABUS_BASE_URL and THALABUS_UI_URL — nothing else.
+#
+# Non-secret configuration is LITERAL here, so neither .env nor a shell variable can
+# redirect a service; the ${} entries that remain are secrets read from .env only.
+services:
+  app:
+    environment:
+      # Loading this file IS the choice of plan, so the app agrees with the file even
+      # when compose is invoked directly instead of through `make run PLAN=SaaS`.
+      # Without this the base literal (local) won and the app showed the local
+      # platform's address while running the SaaS overlay.
+      THALABUS_PLAN: saas
+      # The host's running platform (a Thalabus debug instance on :5210 here; for a
+      # remote deployment use its public URL, e.g. https://demo.thalabus.ai).
+      THALABUS_BASE_URL: http://host.docker.internal:5210
+      THALABUS_UI_URL: http://localhost:5210
+      # The host-published database — for this profile the base file's own `graph`
+      # container stays unused (it is not started when only these two files load; it
+      # would only join the stack via `up`, and nothing here points at it).
+      NEO4J_URI: bolt://host.docker.internal:7687
+      # Secrets (.env). The retrieval keys default to the chat key because one provider
+      # token covers all three routes once the endpoint enables them.
+      LLM_API_KEY: ${LLM_API_KEY:-}
+      EMBEDDINGS_API_KEY: ${EMBEDDINGS_API_KEY:-${LLM_API_KEY:-}}
+      RERANKER_API_KEY: ${RERANKER_API_KEY:-${LLM_API_KEY:-}}
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-hackathon-2026}
+      # The chat + retrieval endpoints asked about by the guided flow's second and third
+      # screens. The /v1 path is part of the endpoint, not of the app: model_test.py
+      # appends /chat/completions to LLM_BASE_URL, so without the path the request lands
+      # on /chat/completions and the gateway answers 403 (verified live: 403 without
+      # /v1, 200 with it).
+      LLM_NAME: apertus-1.5-70b
+      LLM_BASE_URL: https://llm.thalabus.ai/v1
+      EMBEDDINGS_URL: https://llm.thalabus.ai/v1/embeddings
+      EMBEDDINGS_MODEL: qwen3-embedding-4b
+      RERANKER_URL: https://llm.thalabus.ai/v1/rerank
+      RERANKER_MODEL: bge-reranker-v2-m3
+      # Remote model configuration (SaaS Model Configuration card, T26). The literals
+      # mirror the platform's own DEFAULT model entry, so an unset key still lands on
+      # the documented default; only the key is a secret. THALABUS_TOKEN already passes
+      # through the base file, so it is not repeated here.
+      SAAS_CFG_SOURCE: default
+      SAAS_CFG_ID: DEFAULT
+      SAAS_CFG_NAME: DEFAULT
+      SAAS_CFG_MODEL: onprem-ai/Apertus-v1.5-70B-FP8
+      SAAS_CFG_BASE_URL: http://thalabus-ai-3:8352/v1
+      SAAS_CFG_KEY: ${SAAS_CFG_KEY:-}
+      SAAS_CFG_REASONING: false
+      # Blank means "do not send it": the platform keeps the budget it already has.
+      SAAS_CFG_TOKEN_LIMIT_KILO: ""

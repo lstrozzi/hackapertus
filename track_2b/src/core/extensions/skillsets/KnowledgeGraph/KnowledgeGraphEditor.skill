@@ -1,0 +1,139 @@
+{
+  "Id": "KnowledgeGraphEditor",
+  "Name": "Knowledge Graph Editor",
+  "Role": 2,
+  "Description": "Allows operations of the Knowledge Graph entities, relationships, and entity-to-document links. The following operations are supported:\n - Create a new Community\n - Create a new entity\n - Update an existing entity\n - \n Merge two entities - Delete an entity\n - Create a new relationship\n - Update an existing relationship\n - Delete a relationship\n - Link an entity to an existing document\n - Unlink an entity from a document.\n\nThe knowledge graph is implemented in Neo4j, the entities are implemented as neo4j nodes, the relationships as neo4j relationships.",
+  "IsInteractive": false,
+  "Args": {
+    "operation": {
+      "Name": "operation",
+      "Type": "string",
+      "Description": "One of the following keywords: COMMUNITY_CREATE, ENTITY_CREATE_OR_UPDATE, ENTITY_MERGE, ENTITY_DELETE, RELATIONSHIP_CREATE_OR_UPDATE, RELATIONSHIP_DELETE, DOCUMENT_LINK_CREATE, DOCUMENT_LINK_DELETE",
+      "Required": true,
+      "Value": ""
+    },
+    "community_id": {
+      "Name": "community_id",
+      "Type": "string",
+      "Description": "The identifier of a community, that is of an entity group. Format: alphanumeric, no white spaces, camel case.",
+      "Required": true,
+      "Value": ""
+    },
+    "community_name": {
+      "Name": "community_name",
+      "Type": "string",
+      "Description": "The name of a community (mandatory for operation COMMUNITY_CREATE).",
+      "Required": false,
+      "Value": ""
+    },
+    "community_description": {
+      "Name": "community_description",
+      "Type": "string",
+      "Description": "A brief description of a community (mandatory for operation COMMUNITY_CREATE).",
+      "Required": false,
+      "Value": ""
+    },
+    "ontology_id": {
+      "Name": "ontology_id",
+      "Type": "string",
+      "Description": "The identifier of an ontology to be associated to the community to be created (mandatory in for operations COMMUNITY_CREATE and RELATIONSHIP_CREATE_OR_UPDATE)",
+      "Required": false,
+      "Value": ""
+    },
+    "entity_id": {
+      "Name": "entity_id",
+      "Type": "string",
+      "Description": "The identifier of an entity. Format: alphanumeric, lower case, use the underscore (_) to separate words (mandatory for all operations ENTITY_CREATE_OR_UPDATE, ENTITY_MERGE, ENTITY_DELETE operations). For sentences like 'John likes Mary' for the relationship 'like' (assuming existing entities 'john' and 'mary'), you must use entity_id='john' and 'second_entity_id'='mary' because the relationships are mono-directional.",
+      "Required": false,
+      "Value": ""
+    },
+    "second_entity_id_to_merge": {
+      "Name": "second_entity_id_to_merge",
+      "Type": "string",
+      "Description": "The identifier of a second entity to merge with the first entity (mandatory for operation ENTITY_MERGE). If the same value for entity_id is given for second_entity_id_to_merge, an error is returned.",
+      "Required": false,
+      "Value": ""
+    },
+    "label": {
+      "Name": "label",
+      "Type": "string",
+      "Description": "The neo4j label of the entity or relationship. It must be a single word, no extra characters or white spaces except for the underscore (_). Mandatory for operations ENTITY_CREATE_OR_UPDATE, RELATIONSHIP_CREATE_OR_UPDATE, ENTITY_DELETE.",
+      "Required": false,
+      "Value": ""
+    },
+    "attributes": {
+      "Name": "attributes",
+      "Type": "string",
+      "Description": "A dictionary of name/value string pairs, that describe the entity or relationship attributes according to the specified Ontology for this label. Do not use these reserved attributes: entity_description, id, label, embedding, entity_source_labels, entity_target_labels. Do not add attribute values that are already in the knowledge graph, to save computational time!",
+      "Required": false,
+      "Value": ""
+    },
+    "relationship_start_entity_id": {
+      "Name": "relationship_start_entity_id",
+      "Type": "string",
+      "Description": "The identifier of the start entity of a relationship (mandatory for operation RELATIONSHIP_CREATE_OR_UPDATE).",
+      "Required": false,
+      "Value": ""
+    },
+    "relationship_end_entity_id": {
+      "Name": "relationship_end_entity_id",
+      "Type": "string",
+      "Description": "The identifier of the end entity of a relationship (mandatory for operation RELATIONSHIP_CREATE_OR_UPDATE).",
+      "Required": false,
+      "Value": ""
+    },
+    "document_or_chapter_id": {
+      "Name": "document_or_chapter_id",
+      "Type": "string",
+      "Description": "The identifier of a document or chapter where the information has been sourced from (mandatory for operations ENTITY_CREATE_OR_UPDATE and RELATIONSHIP_CREATE_OR_UPDATE).",
+      "Required": false,
+      "Value": ""
+    },
+    "paragraph_id": {
+      "Name": "paragraph_id",
+      "Type": "string",
+      "Description": "The identifier of a paragraph where the information has been sourced from (mandatory for operations ENTITY_CREATE_OR_UPDATE and RELATIONSHIP_CREATE_OR_UPDATE). Example: from the html document <p id='p-17'> the value is: 'p-7'",
+      "Required": false,
+      "Value": ""
+    },
+    "linked_document_id": {
+      "Name": "linked_document_id",
+      "Type": "string",
+      "Description": "The identifier of an existing document to link the entity to, or to unlink the entity from (mandatory for operations DOCUMENT_LINK_CREATE and DOCUMENT_LINK_DELETE). The document must already exist: this operation never creates one.",
+      "Required": false,
+      "Value": ""
+    },
+    "link_kind": {
+      "Name": "link_kind",
+      "Type": "string",
+      "Description": "Who decided the link exists: 'curated' when a person or an agent asserted it, 'extracted' when a program derived it. Mandatory for DOCUMENT_LINK_CREATE and DOCUMENT_LINK_DELETE; only edges of the given kind are ever created or deleted.",
+      "Required": false,
+      "Value": ""
+    }
+  },
+  "ArgsHtml": null,
+  "Result": {
+    "error_message": {
+      "Name": "error_message",
+      "Type": "string",
+      "Description": "An error message if the operation fails.",
+      "Required": false,
+      "Value": ""
+    },
+    "success": {
+      "Name": "success",
+      "Type": "boolean",
+      "Description": "Indicates if the operation was successful.",
+      "Required": false,
+      "Value": ""
+    }
+  },
+  "ResultHtml": null,
+  "Dependencies": [],
+  "CSharpClass": null,
+  "LLM_Label": "KnowledgeGraph",
+  "BlackList_IF": "lambda plan: False",
+  "error": null,
+  "error_message": null,
+  "utilize_llm": false
+}

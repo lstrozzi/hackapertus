@@ -1,0 +1,10 @@
+# Build-context exclusions. The context root is `src/` (compose sets `build: ./src`),
+# so `COPY app/` would otherwise carry host bytecode into an image that judges
+# rebuild and inspect. Kept minimal on purpose: nothing here may hide a file the
+# app needs at runtime.
+#
+# Patterns are matched relative to the context root, NOT like .gitignore: a bare
+# `__pycache__/` was measured to leave `app/__pycache__/` in the image, hence the
+# explicit `**/` prefixes. Verified by building `COPY app/` into a probe image.
+**/__pycache__/
+**/*.py[cod]

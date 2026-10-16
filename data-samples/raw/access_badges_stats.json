@@ -1,0 +1,39 @@
+{
+ "table": "access_badges",
+ "file": "access_badges.ndjson.gz",
+ "size_bytes": 39022,
+ "sha256": "6728b6178305efa5e1a3d5ab0897a6ae6ae49c6222c9a2d78c2d6a1f2be7c363",
+ "row_count": 520,
+ "sampled_rows": 520,
+ "field_presence_of_sample": {
+  "id": 520,
+  "body_id": 520,
+  "body_key": 520,
+  "person_external_id": 520,
+  "person_id": 520,
+  "external_id": 520,
+  "person_fullname": 520,
+  "beneficiary_person_id": 520,
+  "beneficiary_person_fullname": 520,
+  "beneficiary_group": 520,
+  "type_de": 520,
+  "type_fr": 520,
+  "type_it": 520,
+  "type_harmonized": 520,
+  "valid_from": 520,
+  "valid_to": 520,
+  "version": 520,
+  "latest": 520,
+  "updated_at": 520,
+  "updated_external_at": 520,
+  "created_at": 520
+ },
+ "tallies_sample": {
+  "type_harmonized": {
+   "lobbyist": 287,
+   "staff": 92,
+   "guest": 84,
+   "language_assistant": 2
+  }
+ }
+}

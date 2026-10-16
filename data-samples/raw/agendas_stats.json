@@ -1,0 +1,35 @@
+{
+ "table": "agendas",
+ "file": "agendas.ndjson.gz",
+ "size_bytes": 43532026,
+ "sha256": "ffa57caeac3e8e61ef9415eafd35776cd90bcb68328602f185fdb52ce9e3f534",
+ "row_count": 423159,
+ "sampled_rows": 2000,
+ "field_presence_of_sample": {
+  "id": 2000,
+  "body_id": 2000,
+  "body_key": 2000,
+  "meeting_id": 2000,
+  "item_date": 2000,
+  "item_external_id": 2000,
+  "item_title": 2000,
+  "item_number_display": 2000,
+  "item_number": 2000,
+  "item_description": 2000,
+  "item_status": 2000,
+  "item_result": 2000,
+  "item_category": 2000,
+  "item_url": 2000,
+  "item_affair_number": 2000,
+  "item_affair_id": 2000,
+  "item_language": 2000,
+  "created_at": 2000
+ },
+ "tallies_sample": {
+  "item_language": {
+   "de": 988,
+   "fr": 818,
+   "it": 4
+  }
+ }
+}

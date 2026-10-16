@@ -1,0 +1,21 @@
+== Q-T6.2 census: 89 bodies with affairs, sums=326123
+   canton       n_bodies?=-1 sum=  167205 e.g. ('Basel-Stadt', 21673)
+   city         n_bodies?=-1 sum=   83974 e.g. ('Genève', 9620)
+   country      n_bodies?=-1 sum=   74380 e.g. ('Schweiz', 70002)
+   municipality n_bodies?=-1 sum=     564 e.g. ('Nidau', 275)
+   canton_key present: 87 rows; top by count: [('BS', 'Basel-Stadt', 21673), ('TI', 'Tessin', 19709), ('ZH', 'Zürich', 19343), ('GE', 'Genf', 18783), ('GE', 'Genève', 9620), ('ZH', 'Zürich', 9612), ('VS', 'Wallis', 8686), ('VD', 'Waadt', 8338)]
+   lang=de affairs total=326123 (http 200)
+   lang=fr affairs total=326123 (http 200)
+   lang=it affairs total=326123 (http 200)
+   lang=rm affairs total=326123 (http 200)
+   lang=de docs total=909141 (http 200)
+   lang=fr docs total=909141 (http 200)
+   lang=it docs total=909141 (http 200)
+   lang=rm docs total=909141 (http 200)
+   A/B 25 affairs: full=45076 B, slim=142 B, ratio=0.32% (http 200/422)
+   burst15: statuses=200,200,200,200,200,200,200,200,200,200,200,200,200,200,200 total=6.6s mean=441ms
+   one-req hdrs: {}
+   docs1000: with_text=0 formats={} langs={}
+   link-rate: 0/0 sampled affair_ids resolved (orphans=0)
+   affair expanded keys: 
+   contributor keys: 

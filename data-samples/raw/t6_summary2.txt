@@ -1,0 +1,21 @@
+A/B 25 affairs full=45076B slim=12942B ratio=28.7% (http 200/200)
+group_by/bodies                    http=422 rows=-1 count=None {"detail":[{"type":"int_parsing","loc":["path","id"],"msg":"Input should be a valid integer, unable to parse string as an integer","input":"
+group_by/councils                  http=404 rows=-1 count=None {"detail":"Not Found"}
+group_by/committees                http=404 rows=-1 count=None {"detail":"Not Found"}
+group_by/groups                    http=404 rows=-1 count=None {"detail":"Not Found"}
+group_by/parties                   http=404 rows=-1 count=None {"detail":"Not Found"}
+group_by/fractionations            http=404 rows=-1 count=None {"detail":"Not Found"}
+group_by sample keys:  meta=null
+docs1000: text=908 pdf=852 tika=0 formats={'application/pdf': 852, 'application/zip': 11, '?': 131, 'text/html': 2, 'application/msword': 3, 'application/rtf': 1} langs={'?': 870, 'fr': 92, 'it': 18, 'de': 20}
+link-rate: 0/8 docs affair_ids resolve
+pdf range-check: 13/20 ok, 4/20 %%PDF
+odata Business               http=200 count=344065
+odata BusinessRole           http=200 count=2530580
+odata BusinessResponsibility http=200 count=350900
+odata Transcript             http=200 count=1753875
+odata PersonCommunication    http=200 count=2445
+odata Person                 http=200 count=18600
+odata PersonAddress          http=200 count=975
+odata Preconsultation        http=200 count=177330
+PersonCommunication sample kinds: {"3": 10, "5": 5, "4": 5} (full table count above)
+PersonAddress keys: AddressLine1,AddressLine2,AddressLine3,AddressType,AddressTypeName,CantonAbbreviation,CantonName,CantonNumber,City,Comments,ID,IsPublic,Language,Modified,PersonNumber,Persons,Postcode,__metadata

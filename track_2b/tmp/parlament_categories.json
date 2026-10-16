@@ -1,0 +1,51 @@
+[
+  {
+    "id": "keyword_cat_bd9d035f0402",
+    "name": "AFFAIR_STATE",
+    "description": "Lifecycle state of the affair, derived from OpenParlData events.title_harmonized (full stream 2026-10-13: 84 raw harmonized titles, 328 nonempty; affairs.state and affairs.state_name_harmonized are dead). LoV is the curated 14-value canonical normalisation of the measured enum; the import file maps every raw title onto one of these (e.g. Beantwortung -> BEANTWORTET, Bereit zur Traktandierung -> TRAKTANDIERT, Uberwiesen/Weisung/Zuweisung an Kommission -> UEBERWIESEN, Im/Vom Parlament behandelt -> BEHANDELT, Abgeschlossen -> ERLEDIGT). The 14 canonical values cover ~70 % of event rows; the long-tail request/deadline vocabulary stays unmapped. Note: the former T13 seed value in Treatment does not occur in the archived corpus and was withdrawn.",
+    "lov": "EINGEREICHT,BEANTWORTET,TRAKTANDIERT,UEBERWIESEN,BEHANDELT,ANGENOMMEN,ABGELEHNT,ABGESCHRIEBEN,ZURUECKGEZOGEN,ERLEDIGT,NICHT_ERHEBLICH,ANTRAG_ANNEHMEN,ANTRAG_ABLEHNEN,ANTRAG_UEBERWEISEN",
+    "documents": 1
+  },
+  {
+    "id": "keyword_cat_5479d3b62be0",
+    "name": "AFFAIR_TYPE",
+    "description": "Parliamentary instrument of the affair, mirroring OpenParlData type_harmonized (measured on the full affairs stream 2026-10-13: 17 values, filled on 83.1 %, top-heavy Anfrage/Interpellation/Regierungsgeschäft/Motion/Postulat ~62 % of filled). LoV values are the harmonized German labels normalised to UPPER_SNAKE (umlauts expanded: REGIERUNGSGESCHAFT, EINBUERGERUNG, ERGAENZUNGSANTRAG); the import file maps raw values onto them. Wikidata bridge on 68.2 % (type_wikidata) is kept as an affair attribute, not here. use_as_document_label candidate (C-4, pending T12).",
+    "lov": "ANFRAGE,INTERPELLATION,REGIERUNGSGESCHAFT,MOTION,POSTULAT,FRAGESTUNDE,WAHL,PARLAMENTARISCHE_INITIATIVE,BERICHT,VERNEHMLASSUNG,INFORMATIONSDOKUMENT,PETITION,VOLKSINITIATIVE,DIVERSES,PARLAMENTARISCHER_GENEHMIGUNGSBESCHLUSS,EINBUERGERUNG,ERGAENZUNGSANTRAG",
+    "documents": 1
+  },
+  {
+    "id": "keyword_cat_08e11371a59c",
+    "name": "DECISION_BODY",
+    "description": "The specific governmental body or council that issued the decision or is reviewing the matter",
+    "lov": "CANTONAL_COUNCIL,EXECUTIVE_COUNCIL,GOVERNMENT_COUNCIL,SPECIAL_COMMISSION",
+    "documents": 0
+  },
+  {
+    "id": "keyword_cat_4773e2b2b99c",
+    "name": "LANGUAGE",
+    "description": "Language of the document/affair title, derived — the corpus carries no trustworthy row-level language field (T8: no original_language; docs.language is copied metadata, not detected). LoV normalised to UPPER_SNAKE of the ISO codes de/fr/it/rm. Measured title fill on affairs: de 74.9 %, fr 44.5 %, it 30.3 %, rm 0.38 % (languages sum > 100 % because titles are multi-translated).",
+    "lov": "DE,FR,IT,RM",
+    "documents": 1
+  },
+  {
+    "id": "keyword_cat_51716f5a32c6",
+    "name": "LEGISLATIVE_STAGE",
+    "description": "The current stage of the legislative process for the discussed bill or proposal",
+    "lov": "APPROVED,FIRST_READING,REJECTED,REPORT_SUBMITTED,SECOND_READING,THIRD_READING,UNDER_REVIEW",
+    "documents": 0
+  },
+  {
+    "id": "keyword_cat_6958f5cbe3fc",
+    "name": "POLICY_DOMAIN",
+    "description": "The specific policy area or subject matter addressed by the legislative decision",
+    "lov": "EDUCATION,ENVIRONMENT,FINANCE,HEALTH,HERITAGE_PROTECTION,INFRASTRUCTURE",
+    "documents": 0
+  },
+  {
+    "id": "keyword_cat_c68aebf967a5",
+    "name": "SCOPE",
+    "description": "Parliament corpus slice of the document: generic level (federal/canton/city, normalised from bodies.type) or the concrete parliament body key used by the demo dossiers — CHE (federal assembly), 1711 (Bern city), 2939 (Thun). Extend with concrete ids (SH, GR, ...) as more feeds land; second-choice use_as_document_label candidate (C-4, pending T12).",
+    "lov": "FEDERAL,CANTON,CITY,CHE,1711,2939",
+    "documents": 1
+  }
+]

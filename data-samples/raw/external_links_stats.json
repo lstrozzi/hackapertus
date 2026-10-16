@@ -1,0 +1,35 @@
+{
+ "table": "external_links",
+ "file": "external_links.ndjson.gz",
+ "size_bytes": 21171633,
+ "sha256": "8b1812892fb481db1907938689e6c27950045453f3d8776d4c8a7be29d16a1fe",
+ "row_count": 231448,
+ "sampled_rows": 2000,
+ "field_presence_of_sample": {
+  "id": 2000,
+  "body_id": 2000,
+  "body_key": 2000,
+  "external_id": 2000,
+  "person_id": 2000,
+  "affair_id": 2000,
+  "url_de": 2000,
+  "url_fr": 2000,
+  "url_it": 2000,
+  "name_de": 2000,
+  "name_fr": 2000,
+  "name_it": 2000,
+  "type_external_de": 2000,
+  "type_external_fr": 2000,
+  "type_external_it": 2000,
+  "type_harmonized_en": 2000,
+  "created_external_at": 2000,
+  "updated_external_at": 2000,
+  "created_at": 2000,
+  "updated_at": 2000
+ },
+ "tallies_sample": {
+  "type_harmonized_en": {
+   "aps_affair": 2000
+  }
+ }
+}

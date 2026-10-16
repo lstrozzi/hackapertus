@@ -1,0 +1,25 @@
+/* The Chat Q&A panel shows a single card, so the card fills the viewport column
+   instead of stopping after a 340px transcript and wasting the space below it:
+   the card is a flex column sized to the window, and the transcript absorbs the
+   growth (max-height none; it still scrolls via overflow). The 300px offset is
+   the chrome above the card when the page is scrolled to it (brand header, step
+   heading, tabs, panel margins) plus the card's own header, question box, footer
+   and padding, leaving a small natural margin at the page tail. min-height keeps
+   the box usable on short viewports. */
+.chat-qa { display: flex; flex-direction: column; align-self: stretch; height: calc(100vh - 300px); min-height: 340px; }
+.chat-qa .chat-transcript { flex: 1 1 auto; min-height: 180px; max-height: none; overflow-y: auto; padding: 16px; background: #f1f5f6; border: 1px solid #d8e0e3; }
+.chat-qa .chat-empty { margin: 50px 0; text-align: center; color: #65747a; }
+.chat-qa textarea { box-sizing: border-box; width: 100%; resize: vertical; }
+.chat-qa select#chat-mode { box-sizing: border-box; width: 100%; }
+.chat-qa .operation-field > span.muted { display: block; margin-top: 4px; }
+.chat-qa .chat-message { margin: 0 0 12px; padding: 10px 12px; border-radius: 6px; background: #fff; border: 1px solid #dce4e6; }
+.chat-qa .chat-message--user { background: #e8eef0; }
+.chat-qa .chat-message--error { border-color: #c9706c; background: #faf0ef; }
+.chat-qa .chat-who { margin: 0 0 4px; font-size: .72rem; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; color: #56676e; }
+.chat-qa .chat-body { margin: 0; white-space: pre-line; line-height: 1.45; }
+.chat-qa .chat-citation-list { margin: 8px 0 0; padding-left: 20px; font-size: .8rem; color: #40525a; }
+.chat-qa .chat-citation-list li { margin-bottom: 5px; }
+.chat-qa .chat-citation-list a { color: #2b606d; text-decoration: underline; text-underline-offset: 2px; }
+.chat-qa .chat-citation-list a:hover { color: #1c4550; }
+.chat-qa .chat-citation-excerpt { color: #67787f; }
+.chat-qa .chat-meta { margin: 6px 0 0; font-size: .72rem; color: #7b8a90; }

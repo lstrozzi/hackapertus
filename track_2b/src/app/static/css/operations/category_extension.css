@@ -1,0 +1,25 @@
+/* Ontology extension box: proposal rows and the review affordances they need. */
+.category-extension .category-extension-note { color: var(--ink-muted, #5b6472); font-size: 0.86rem; }
+
+.category-proposed-badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.05rem 0.45rem;
+  border-radius: 999px;
+  border: 1px solid currentColor;
+  color: #8a6d1c;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.category-approve-button {
+  border: 1px solid currentColor;
+  border-radius: 6px;
+  background: transparent;
+  padding: 0.15rem 0.6rem;
+  font: inherit;
+  cursor: pointer;
+}
+
+.category-approve-button:disabled { cursor: default; opacity: 0.55; }

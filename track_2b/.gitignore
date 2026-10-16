@@ -2,6 +2,8 @@
 .env
 .env.*
 !.env.example
+keys/
+*.pem
 
 # Model weights and checkpoints — do not commit these
 *.bin

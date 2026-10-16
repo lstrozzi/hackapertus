@@ -1,0 +1,251 @@
+# docker-compose.plan-local.yml â€” Run Plan Local overlay: the Thalabus platform, unmodified.
+#
+# Loaded by `make run` (Plan Local, the default). NOT loaded by `make run PLAN=SaaS`,
+# which talks to a remote instance instead (docs/RUN_PLANS.md).
+#
+# Ground rules:
+#   * every service below is an OFFICIAL Thalabus image, referenced by name and
+#     digest only â€” nothing is built from source, forked, or vendored in this tree;
+#   * the images are pulled at start time, never shipped, so they are outside the
+#     submission licence grant entirely;
+#   * publication of the `-hackathon` mirrors is a public-scope freeze: one frozen
+#     digest per repository, tag immutability on;
+#   * `-hackathon` is part of the image *name* only: a tag carrying the word
+#     `hackathon` is excluded. References are tag-pinned until the frozen mirrors
+#     are published; `make lint` stays RED until each mirror default below carries
+#     a 64-hex digest suffix, which is required before submission. This digest rule
+#     applies to the two `-hackathon` MIRROR services only (web, python) â€” the three
+#     PUBLIC images (neo4j, embeddings, reranker) float on :latest: the model
+#     wrappers and the graph database contain no platform code, so they need no
+#     mirror.
+#
+# Status: Plan Local remains on hold for the two frozen mirror digests and for the
+# platform owner's pull-and-run sanction; `make lint` gates the first.
+# Five services: thalabusweb, pythonserver (frozen mirrors) + neo4j, embeddings,
+# reranker (public thalabus/neo4j, thalabus/embeddings_server, thalabus/vllm_server).
+# Override the image references for an internal rehearsal, e.g.
+#   make run THALABUS_WEB_IMAGE=thalabus/thalabusweb:latest NEO4J_PASSWORD=dev
+#
+# Prerequisite: `172.20.0.0/24` and the published ports are free. Plan Local creates and
+# owns its own bridge network `ThalabusHackathonNetwork`, so it never touches any
+# pre-existing platform network â€” but Docker still rejects two networks with the same
+# subnet, so stop any stack already holding 172.20.0.0/24 before starting Plan Local.
+#
+# Hardware prerequisite: Linux on ARM64, >=128 GB RAM, NVIDIA GPU >=96 GB (tested on
+# NVIDIA DGX Spark, ARM64 GB10). `make run` enforces this in preflight and errors with
+# the tested-platform banner and the Plan SaaS fallback when the host differs.
+
+x-platform-env: &platform-env
+  # Tells the platform which network it lives on, so containers it starts itself over the
+  # Docker Engine API join THIS network and not the platform's default one (the image
+  # honours this variable). Ignored by some builds, which is harmless here: Plan Local
+  # declares every service itself.
+  THALABUS_DOCKER_NETWORK_NAME: ${THALABUS_NETWORK_NAME:-ThalabusHackathonNetwork}
+  THALABUS_PYTHON_API_JWT_ALGORITHM: RS256
+  THALABUS_PYTHON_API_JWT_AUDIENCE: pythonserver
+  THALABUS_PYTHON_API_JWT_ISSUER: thalabus
+  THALABUS_PYTHON_API_JWT_PRIVATE_KEY_PATH: /keys/python-api-jwt-private.pem
+  THALABUS_PYTHON_API_JWT_PUBLIC_KEY_PATH: /keys/python-api-jwt-public.pem
+  THALABUS_PYTHON_API_JWT_TOKEN_LIFETIME_MINUTES: "10"
+
+# In-container embedding and reranking models keep the stack air-gapped at runtime:
+# no external embedding or reranking provider is called.
+#
+# TWO services, TWO images â€” the embeddings server and the reranker are separate
+# vLLM services and never share one image:
+#   embeddings -> thalabus/embeddings_server  (wrapper over nvcr.io/nvidia/vllm,
+#                default CMD = vllm serve $MODEL_HANDLE; reads MODEL_HANDLE + PORT)
+#   reranker   -> thalabus/vllm_server        (same public vLLM base; started with an
+#                explicit vllm serve command: pooling runner, port 8364)
+# Neither wrapper contains platform code (their Dockerfiles are the NVIDIA public
+# vLLM base + apt utilities + pip fixes), so both repositories are published PUBLIC
+# at :latest â€” no frozen -hackathon mirror and no digest pin for these two. The
+# graph database `thalabus/neo4j:latest` is likewise a public repository: unmodified
+# upstream software with no platform code, so a dedicated mirror would add work
+# without adding isolation. The two PLATFORM images that do carry platform code
+# (web, python) keep the frozen, digest-pinned -hackathon treatment; `make lint`
+# enforces that split (the three public repositories are the only allowed
+# non-mirror thalabus/ images).
+
+x-model-env: &model-env
+  # The images' own ENV contract: the served model handle and its port â€” not
+  # MODEL_ID, which nothing reads.
+  MODEL_HANDLE: Qwen/Qwen3-Embedding-0.6B
+  PORT: "8354"
+
+services:
+  neo4j:
+    image: ${THALABUS_NEO4J_IMAGE:-thalabus/neo4j:latest}
+    container_name: hackathon_neo4j
+    volumes:
+      - neo4j-data:/data
+      - neo4j-logs:/logs
+      - ./keys:/keys:ro
+    environment:
+      # A default is given (not `:?`) so `make stop` works without the secret;
+      # the Makefile `preflight` target is what enforces NEO4J_PASSWORD for Plan Local.
+      NEO4J_AUTH: neo4j/${NEO4J_PASSWORD:-thalabus-hackathon-dev}
+    networks:
+      platform:
+        ipv4_address: 172.20.0.4
+
+  # Model service 1 of 2: vLLM embeddings server. Public image, pinned release tag 2026-10-16.
+  # Default CMD runs `vllm serve $MODEL_HANDLE`.
+  # vLLM needs: GPU access, shared IPC, and model weights already in the HF cache
+  # (mount a pre-baked cache â€” pulling weights would break the air-gap).
+  embeddings:
+    image: ${THALABUS_EMBEDDINGS_IMAGE:-thalabus/embeddings_server:2026-10-16}
+    container_name: hackathon_embeddings
+    ipc: host
+    environment: *model-env
+    volumes:
+      - ./models-cache:/root/.cache/huggingface:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - "8354:8354"
+    networks:
+      platform:
+        ipv4_address: 172.20.0.9
+
+  # Model service 2 of 2: vLLM reranker server â€” its own image (thalabus/vllm_server,
+  # never a re-use of the embeddings image), started as a plain vLLM pooling serve:
+  # pooling runner on port 8364, tiny GPU memory share, API surface POST /v1/score.
+  # Public image, pinned release tag 2026-10-16.
+  reranker:
+    image: ${THALABUS_RERANKER_IMAGE:-thalabus/vllm_server:2026-10-16}
+    container_name: hackathon_reranker
+    ipc: host
+    command: ["bash", "-lc", "vllm serve ${RERANKER_MODEL_HANDLE:-BAAI/bge-reranker-v2-m3} --host 0.0.0.0 --port 8364 --gpu-memory-utilization 0.02 --runner pooling --dtype auto"]
+    environment:
+      <<: *model-env
+      # Env must agree with the command line: inheriting the shared anchor alone
+      # would leave this container advertising the embeddings model and port.
+      MODEL_HANDLE: BAAI/bge-reranker-v2-m3
+      PORT: "8364"
+    volumes:
+      - ./models-cache:/root/.cache/huggingface:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+    ports:
+      - "8364:8364"
+    networks:
+      platform:
+        ipv4_address: 172.20.0.10
+
+  pythonserver:
+    image: ${THALABUS_PYTHON_IMAGE:-thalabus/pythonserver-hackathon:2026-10}
+    container_name: hackathon_pythonserver
+    depends_on:
+      - neo4j
+    volumes:
+      - documents:/app/documents
+      - cache:/app/cache
+      - database:/app/db
+      - ./keys:/keys:ro
+    ports:
+      - "5100:5100"
+    environment:
+      <<: *platform-env
+      BLAZOR_HOSTNAME: 172.20.0.2
+      BLAZOR_PORT: "8080"
+      BLAZOR_PROTOCOL: http
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-thalabus-hackathon-dev}
+    networks:
+      platform:
+        ipv4_address: 172.20.0.3
+
+  thalabusweb:
+    image: ${THALABUS_WEB_IMAGE:-thalabus/thalabusweb-hackathon:2026-10}
+    container_name: hackathon_thalabusweb
+    depends_on:
+      - neo4j
+      - pythonserver
+    volumes:
+      - documents:/app/documents
+      - logs:/app/logs
+      - ./keys:/keys:ro
+      # The platform can also start its own model containers over the Engine API, the
+      # way the production deployment does. They are declared explicitly here instead
+      # (two services, two images), so if that runtime path fires at the
+      # event the containers below must be reconciled against it: same images, and no
+      # clash on the published model ports or the fixed platform IPAM addresses.
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "${THALABUS_PORT:-8080}:8080"
+    environment:
+      <<: *platform-env
+      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_URLS: http://+:8080
+      HTTP_PORTS: "8080"
+      IS_RUNNING_IN_DOCKER_COMPOSE: "true"
+      BLAZOR_HOSTNAME: ThalabusWeb
+      BLAZOR_PORT: "8080"
+      BLAZOR_PROTOCOL: http
+      NEO4J_URI: bolt://neo4j:7687
+      NEO4J_PUBLIC_URI: bolt://localhost:7687
+      NEO4J_USER: neo4j
+      NEO4J_PASSWORD: ${NEO4J_PASSWORD:-thalabus-hackathon-dev}
+      DOCKER_ENGINE_ADDR: host.docker.internal
+      DOCKER_ENGINE_PORT: "2375"
+      # The platform's own LLM is configured over the public API after start
+      # (POST /v1/api/platform/config/model) from the same LLM_* trio â€” the
+      # submission never mounts or edits platform configuration files.
+    networks:
+      platform:
+        ipv4_address: 172.20.0.2
+
+  # The submission container joins the platform network so that Plan Local needs no
+  # published port for the platform at all: browser links use THALABUS_UI_URL
+  # (published port), REST calls use the service DNS name.
+  app:
+    environment:
+      # Loading this file IS the choice of plan, mirroring docker-compose.plan-saas.yml,
+      # so the app cannot end up describing the other plan when compose is invoked
+      # directly or when .env still carries a THALABUS_PLAN from an earlier session.
+      THALABUS_PLAN: local
+      # The same literal pair the platform service above is configured with: the guided
+      # flow's Docker Engine screen tests exactly the address the platform dials, not a
+      # second value that could flatter the setup on one side only.
+      DOCKER_ENGINE_ADDR: host.docker.internal
+      DOCKER_ENGINE_PORT: "2375"
+    networks:
+      # Both networks, on purpose. `platform` for the fixed addresses of the platform
+      # services; `default` because that is where this submission's own `graph` store lives.
+      # Naming a single network quietly removes the implicit
+      # default membership, so with only `platform` listed the app could not resolve
+      # `graph` at all â€” the store answers, just not from a network the app is attached to.
+      default:
+      platform:
+        ipv4_address: 172.20.0.20
+
+networks:
+  platform:
+    # Same single variable as THALABUS_DOCKER_NETWORK_NAME above. The subnet stays literal:
+    # the services' fixed addresses below are all 172.20.0.x, so overriding the subnet
+    # without rewriting them would fail â€” a knob that half-works is worse than none.
+    name: ${THALABUS_NETWORK_NAME:-ThalabusHackathonNetwork}
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/24
+
+volumes:
+  neo4j-data:
+  neo4j-logs:
+  documents:
+  logs:
+  cache:
+  database:

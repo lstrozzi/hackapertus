@@ -1,0 +1,21 @@
+{
+ "table": "person_images",
+ "file": "person_images.ndjson.gz",
+ "size_bytes": 3123594,
+ "sha256": "0b43b9cd162285e62bfc3b7ee85fc6b076d0aebae032fa0cc4893d43156d89cb",
+ "row_count": 71715,
+ "sampled_rows": 2000,
+ "field_presence_of_sample": {
+  "id": 2000,
+  "person_id": 2000,
+  "source_url": 2000,
+  "oparl_url": 2000,
+  "profile_url": 2000,
+  "thumb_url": 2000,
+  "valid_from": 2000,
+  "valid_to": 2000,
+  "version": 2000,
+  "latest": 2000
+ },
+ "tallies_sample": {}
+}

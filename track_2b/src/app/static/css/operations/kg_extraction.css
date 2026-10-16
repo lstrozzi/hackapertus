@@ -1,0 +1,14 @@
+.kg-extraction .operation-field select { width: 100%; min-height: 38px; }
+.kg-extraction .operation-empty { min-height: 84px; background: #f3f5f7; border-left: 3px solid #4a7c94; }
+.kg-extraction .operation-status { color: #2f5a6e; background: #e2eef3; }
+.kg-extraction-result p { margin: 0 0 8px; }
+.kg-extraction-result-title { font-weight: 600; color: #2f5a6e; }
+.kg-extraction-group { border: 1px solid #d6dfe2; border-radius: 5px; background: #fbfdfd; margin: 0 0 6px; padding: 6px 10px; }
+.kg-extraction-group summary { cursor: pointer; font-weight: 600; color: #33505c; font-size: .86rem; }
+.kg-extraction-group ul { margin: 6px 0 4px; padding-left: 18px; columns: 2; }
+.kg-extraction-group li { font-size: .84rem; color: #40565f; }
+.kg-extraction-result table { width: 100%; border-collapse: collapse; font-size: .84rem; }
+.kg-extraction-result th { text-align: left; color: #45575e; border-bottom: 1px solid #d6dfe2; padding: 4px 8px; }
+.kg-extraction-result td { border-bottom: 1px solid #eceff0; padding: 4px 8px; color: #3c4f57; }
+.kg-extraction-result td.kg-extraction-rel { font-weight: 600; color: #594c78; }
+.kg-extraction-warning { color: #7a5a17; font-size: .82rem; margin-top: 6px; }

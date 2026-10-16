@@ -1,103 +1,68 @@
-# Track 2 B: Own Project
+# Thalabus | Hack Apertus Track 2B
 
-Bring your own idea and build a working Apertus prototype that tackles a problem you care about — any domain, any use case. The project must be new, started within the hackathon period.
+A prototype for exploring parliamentary documents: ingest them, categorise them against an ontology, extract a knowledge graph, and ask questions answered with citations. Proposals and applied changes are kept apart, and every answer cites the fragments it used.
 
-Submissions must use the Apertus model family.
-For Track 2 this means that submitted solutions must be built with Apertus. Other open-weights models can be used to support development, e.g. as automatic judges during evaluation. Their role must be clearly described in the submission report.
+Workspaces: **Documents** (ingest, status), **Categories** (propose, apply, extend the ontology), **Knowledge** (metamodel, graph extraction), **Graph** (explore entities), **Chat** (questions with citations).
 
-💬 In case you have questions, join the conversation on [Discord](https://discord.gg/hack-apertus) or send an email to “hello@hackapertus.ch”
+**Built to run on your own hardware.** This application and the Thalabus platform it builds on are designed for local, on-premise installations in small data centres: no hyperscaler and no frontier LLM. Documents, the graph and inference stay on infrastructure you administer, using an open model of the Apertus class that fits on a single machine. Plan Local below is that design; Plan SaaS is only a development convenience.
 
----
+## Quick start
 
-## 🔧 Resources & Tools
+Needs Docker Engine with Compose v2, GNU Make, and an OpenAI-compatible chat endpoint (built for the Apertus family). The app is served at <http://localhost:8000>.
 
-Check our resources & tools page for detailed information:
-https://hackapertus.notion.site/resources-tools
+1. Copy `.env.example` to `.env` and set `LLM_API_KEY` (and `NEO4J_PASSWORD` for Plan Local). Never commit `.env`.
+2. Start a run plan below.
+3. Open the app and press **Test model — Hello World** before relying on the model.
 
-| Models           | URL                                      |
-|------------------|------------------------------------------|
-| Apertus v1.5 8B  | [huggingface.co/swiss-ai/Apertus-v1.5-8B](https://huggingface.co/swiss-ai/Apertus-v1.5-8B)  |
-| Apertus v1.5 70B | [huggingface.co/swiss-ai/Apertus-v1.5-70B](https://huggingface.co/swiss-ai/Apertus-v1.5-70B) |
+### Plan Local (submitted path)
 
+```sh
+make keys   # once: platform JWT key pair, stays local
+make run
+```
 
-## Target architecture (mandatory)
+Runs the app, its Neo4j, the Thalabus platform, and embedding and reranking services on your own host; inference stays inside the stack. Requires Linux ARM64, at least 128 GB RAM and an NVIDIA GPU with at least 96 GB memory (tested on NVIDIA DGX Spark); a preflight check refuses other hosts. `models-cache/` must hold the embedding and reranker weights. The platform reaches the Docker Engine API at `DOCKER_ENGINE_ADDR`:`DOCKER_ENGINE_PORT` (default `host.docker.internal:2375`, set in `docker-compose.plan-local.yml`). Details: [`docs/RUN_PLANS.md`](docs/RUN_PLANS.md).
 
-Whatever you build in Track 2B must be deployable in one of these three architectures:
+**Not yet release-ready:** the two platform image digests are still unpinned (`make lint` fails until they are recorded) and the platform owner's pull-and-run authorisation is pending.
 
-- **a) On-premise** — on the organisation's own infrastructure, under its own administration.
-- **b) Air-gapped** — with no external network connection at runtime.
-- **c) Sovereign Swiss cloud** — on a cloud platform operated in Switzerland, under Swiss jurisdiction, with Swiss data residency.
+### Plan SaaS (development fallback)
 
----
+```sh
+make run PLAN=SaaS
+```
+
+Runs the app locally against a remote Thalabus instance and model endpoints. Needs network access, credentials, and access agreed with T2B; it is not air-gapped. The checked-in profile is a laptop development profile: change the endpoint literals in `docker-compose.plan-saas.yml` to target another instance, and keep credentials out of committed files.
+
+## Configuration
+
+Secrets live only in `.env` (see `.env.example`); endpoints and models are literals in the compose files. The chat model is set by `LLM_NAME`, `LLM_BASE_URL` and `LLM_API_KEY` and can differ from the platform's own model, so confirm the resolved model in the app before attributing results to Apertus.
 
 ## Data
 
-The `data/` directory must not exceed 100 MB.
+`data/sample/` holds 39 sample PDFs (about 19 MB). Their source and redistribution licence are **not yet recorded per file**; verify them before publishing. The template caps `data/` at 100 MB. A missing document or event means "not found in this snapshot", never proof that no answer exists.
 
----
+### Document identity
 
-## 📦 Submission Requirements & Deliverables
+One sample file maps to one `Document` node: a platform node (`docid-<digits>`) is reused, else an earlier node of this app, else a single new `docid-track2b-<sha256(filename)>` node is created. A node from another corpus that merely shares a filename is never adopted, and a failed lookup aborts the sync rather than creating blind (`tests/document_identity_unit_test.py`).
 
-❗️ Submissions are not handled on Devpost but via this URL only:
-http://hackapertus.ch/online-hack/submissions
+## Verification
 
-The submission must: 
-1. follow the template repo and include all prerequisite files and definitions
-2. follow the specified input/output formats
-3. run in a Docker container, launched with `make run` from the root of the project
-4. run end-to-end when judges try to run it
+```sh
+make health   # app and platform status
+make lint     # release gate: image digests, nothing vendored
+make verify   # documentation-versus-code checks (live checks need a running app)
+python tests/categorization_unit_test.py
+python tests/category_extension_unit_test.py
+python tests/document_identity_unit_test.py
+python tests/chat_expansion_unit_test.py
+```
 
-### Git repo (URL)
-- Create your repo from this template (**Use this template**) and work in the `track_2b/` challenge directory. Delete the other track challenge directories.
-- Keep `track_2b/` as it is: don't rename it or move its files.
-- Set the repo to PUBLIC (Settings --> Collaborators --> Manage Visibility)
-- Submit the URL of YOUR Git repo.
+Passing unit tests do not show that a clean machine can run the full stack. Measurements and limits are in [`technical_report.md`](technical_report.md); per-feature notes are in [`docs/`](docs/).
 
-### Technical Report (pdf)
-- Update [technical_report.md](technical_report.md) in this repository with all the details for your submission.
-- Upload a pdf of your technical report to this directory, named as `TeamName_Report.pdf`.
-- Format: pdf, max. 6 pages w/o references
-- Submit the pdf of the technical report.
+## Submission status
 
-### Demo video (URL)
-- Max. 2 min demo video of your prototype
+This is the staging project, not the Thalabus monorepo. The public repository must contain only the approved submission tree, with no staging history, unrelated Thalabus source, credentials or private data, plus a root `PROVENANCE.md` (ownership, licence boundaries, access preconditions) that is **not written yet**. The template also asks for a PDF report of at most six pages and a demo video of at most two minutes; neither is in this tree.
 
-### Dataset (URL) - optional, depending on your project
-Submitted datasets must comply with our guidelines for responsibly sourced datasets.
+## License
 
-- Create a user account on Hugging Face
-- Clone our dataset template on Hugging Face: https://huggingface.co/datasets/HackApertus/online_hack_template
-- Complete the dataset card with all required information
-- Upload your dataset. It should consist of the following components:
-    - evaluation dataset (i.e. individual test cases)
-    - model response dataset (i.e. the model response to each test case)
-    - metadata file (i.e. additional information about each test case; where relevant, this file must contain instance-level licensing information) 
-- Make sure your dataset access control is set to PUBLIC
-- Provide the URL of _your_ data set
-
-
----
-
-## ⚖️ Judging Criteria
-
-1. Purposeful use of AI
-2. Technical rigour
-3. Value, cost & scalability
-4. Sovereign deployability
-5. Implementation feasibility
-
-Judges use a Scale 0–5 per dimension.
-
----
-
-## Support
-
-**Licensing requirements**
-Please check our Terms & Conditions (6. What you build is open source):
-https://hackapertus.ch/terms-and-conditions
-
-## FAQ
-💡 https://hackapertus.ch/faq
-
-## Contact
-💬 In case you have questions, join the conversation on Discord or send an email to “hello@hackapertus.ch”
+The CEO of T2B AG has released the right to copy and adapt the T2B-owned software part of Thalabus for this hackathon as open source; see the [release attestation](thalabus_opensource_release.pdf). The template is Apache-2.0. Component licences and data provenance are still to be settled at packaging. This repository grants no access to a Thalabus instance.

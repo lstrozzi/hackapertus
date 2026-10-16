@@ -1,0 +1,5 @@
+.category-inspection table { width: 100%; border-collapse: collapse; text-align: left; }
+.category-inspection th, .category-inspection td { padding: 9px 10px; border-bottom: 1px solid #dce3e6; vertical-align: top; }
+.category-inspection th { color: #344a52; background: #eff4f3; font-size: .82rem; }
+.category-inspection th:last-child, .category-inspection td:last-child { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.category-inspection .category-inspection-lov { margin-top: 4px; color: #5c6f77; font-size: .78rem; }

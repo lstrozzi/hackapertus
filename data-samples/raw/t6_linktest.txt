@@ -1,0 +1,5 @@
+﻿ids: [340560, 341104]
+https://api.openparldata.ch/v1/affairs/340560 200 NoneType None
+https://api.openparldata.ch/v1/affairs/340560/ 200 NoneType None
+https://api.openparldata.ch/v1/affairs/341104 200 NoneType None
+https://api.openparldata.ch/v1/affairs/341104/ 200 NoneType None

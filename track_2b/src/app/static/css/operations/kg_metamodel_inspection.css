@@ -1,0 +1,13 @@
+.kg-metamodel-inspection table { width: 100%; border-collapse: collapse; text-align: left; }
+.kg-metamodel-inspection th, .kg-metamodel-inspection td { padding: 9px 10px; border-bottom: 1px solid #dce3e6; vertical-align: top; }
+.kg-metamodel-inspection th { color: #344a52; background: #edf2f5; font-size: .82rem; }
+.kg-metamodel-inspection .kg-edge-endpoints { color: #5c6f77; font-size: .82rem; margin-top: 2px; }
+/* The element and type cells span all property rows of their element. */
+.kg-metamodel-inspection .kg-cell-element, .kg-metamodel-inspection .kg-cell-type { vertical-align: middle; border-right: 1px solid #dce3e6; background: #f8fbfc; }
+.kg-metamodel-inspection .kg-cell-element strong { display: block; }
+.kg-metamodel-inspection .kg-element-description { color: #5c6f77; font-size: .8rem; font-weight: 400; margin-top: 4px; }
+.kg-metamodel-inspection td code { font-weight: 600; background: #f2f6f8; padding: 1px 5px; border-radius: 3px; }
+.kg-metamodel-inspection .kg-attr-type { color: #5c6f77; font-size: .76rem; }
+.kg-metamodel-inspection .kg-attr-description { color: #3a4750; }
+.kg-metamodel-inspection .kg-attr-none { color: #5c6f77; font-style: italic; font-size: .86rem; }
+

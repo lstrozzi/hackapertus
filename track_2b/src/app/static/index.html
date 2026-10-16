@@ -1,0 +1,1957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hack Apertus — Submission</title>
+<style>
+  /* One number for the width of the page. `main` and `.crumbs` each carried their own 860px, so the
+     breadcrumb could silently stop aligning with the content under it, and 860px was chosen when the
+     widest thing on the page was a paragraph: the two deployment slides need more room than that and
+     came out unreadable at 367px. `100%` is spelled rather than `100vw` because it resolves against the
+     containing box, which leaves out a classic (layout-taking) vertical scrollbar, whereas `100vw` does
+     not and can therefore ask for more room than a scrolling page has. Measured here there was nothing
+     to see either way: this browser reports `innerWidth` equal to `clientWidth` (1694px on each side),
+     i.e. overlay scrollbars, and setting the width to 100vw too produced no horizontal overflow at all,
+     so that spelling is not measurable on this machine -- it is the one that cannot break on a machine
+     whose scrollbars do take layout. With `100%` and `box-sizing: border-box` on the two rules below,
+     the page was probed at 640, 780, 1000, 1300, 1500, 1600, 1640 and 1694px and overflowed by nothing
+     at any of them, with the breadcrumb's left and right edges on the content's at all of them. */
+  :root {
+    color-scheme: light dark;
+    --page-width: min(1600px, 100%);
+  }
+  body { font-family: system-ui, sans-serif; margin: 0; background: #f5f6f8; color: #20242b; }
+  header { position: relative; overflow: hidden; background: #20242b; color: #fff; padding: 16px 22px; display: flex; gap: 14px; align-items: center; }
+  header h1 { font-size: 1.05rem; margin: 0; font-weight: 600; }
+  /* Scoped class rather than a bare `header span` selector: the brand elements are
+     spans too, and a blanket opacity/size rule would grey out the wordmark. */
+  .header-sub { opacity: .7; font-size: .85rem; }
+
+  /* Event banner motif: the red corner bracket from the Hack Apertus poster, at the
+     top right. Both legs end in a butt joint — a flat 90-degree end, no mitred or
+     pointed tip — so the two meet only at the corner itself. Nothing clips these
+     boxes, so the band renders in any browser without clip-path support.
+     Purely decorative. */
+  .brand-band {
+    --apertus-red: #e2141e;
+    --band-thickness: 12px;
+    --band-length: 220px;
+    position: absolute;
+    inset: 0 0 auto auto;
+    width: var(--band-length);
+    height: 100%;
+    pointer-events: none;
+  }
+  .brand-band::before,
+  .brand-band::after {
+    content: "";
+    position: absolute;
+    background: var(--apertus-red);
+  }
+  .brand-band::before {
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: var(--band-thickness);
+  }
+  .brand-band::after {
+    top: 0;
+    right: 0;
+    width: var(--band-thickness);
+    height: 100%;
+  }
+
+  /* thalabus identity (the project name is always lowercase), copying the real
+     header component
+     (ThalabusWeb/Shared/ThalabusLogo.razor.css): same box, border, radius, metrics
+     and wordmark weight/tracking. The one deliberate difference is the typeface —
+     Museo Moderno is a licensed commercial family whose files are not ours to
+     re-publish under this submission's Apache-2.0 terms, so the stack names Arial
+     first instead of silently falling back through a different font. */
+  .logo-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    width: 42px;
+    height: 42px;
+    background-color: #3E83A7;
+    border: 2px solid #213b56;
+    border-radius: 10px;
+  }
+  .logo-image {
+    display: block;
+    width: 36px;
+    height: 36px;
+  }
+  .brand-name {
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: 700;
+    font-size: 1.55rem;
+    letter-spacing: -.03em;
+    line-height: 1;
+  }
+  .header-spacer { flex: 1 1 auto; }
+  /* The real logo is a landscape lockup (quartered "25" sphere plus a lowercase
+     "t2b" wordmark), not the square chip I had guessed at, so only the height is
+     constrained and the width follows the intrinsic 778x320 ratio.
+     Vendored from https://t2b.ch/wp-content/uploads/2026/01/logo_t2b_transparent2-1_25.png
+     (the site's largest original; no SVG is published, palette transparency, confirmed
+     by decoding IHDR/PLTE/tRNS rather than trusting the filename's "transparent").
+     The white plaque is measured, not cosmetic. WCAG 2 luminance ratios for the four
+     dominant colours against this #20242b header: 14.92 / 3.39 / 3.19 / 2.82, i.e. the
+     wordmark blue and one red fall under the 3:1 floor for non-text graphics. On the
+     white plaque the same colours reach 5.52 / 4.87 / 4.59, which is also the only
+     background t2b.ch itself ever shows the mark on. */
+  .event-plaque {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-inline-end: 12px;
+  }
+  .event-mark {
+    display: block;
+    height: 30px;
+    width: auto;
+  }
+  .participant-name {
+    font-style: italic;
+    font-size: .95rem;
+    opacity: .88;
+  }
+  main { max-width: var(--page-width); box-sizing: border-box; margin: 22px auto; padding: 0 16px; display: grid; gap: 16px; }
+  .card { background: #fff; border: 1px solid #d9dce2; border-radius: 10px; padding: 16px 18px; }
+  .card h2 { margin: 0 0 10px; font-size: .95rem; }
+  .row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin: 8px 0; }
+  .row[hidden] { display: none; }
+  code, .kv { font-family: ui-monospace, monospace; font-size: .85rem; }
+  .kv b { display: inline-block; min-width: 130px; font-weight: 600; }
+  button { background: #1a56db; color: #fff; border: 0; border-radius: 7px; padding: 9px 16px; font-size: .9rem; cursor: pointer; }
+  button:disabled { opacity: .55; cursor: wait; }
+  input[type=checkbox] { width: 16px; height: 16px; }
+  select, input[type=text], input[type=password] {
+    font: inherit;
+    font-size: .88rem;
+    padding: 6px 9px;
+    border: 1px solid #c6cbd4;
+    border-radius: 7px;
+    background: #fff;
+    color: inherit;
+    min-width: 0;
+  }
+  select:disabled, input[type=text]:disabled, input[type=password]:disabled { background: #f0f2f5; opacity: .8; }
+  /* Labelled two-column fields for the SaaS configuration form. */
+  .field { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 10px; align-items: center; margin: 6px 0; }
+  .field > label { font-weight: 600; font-size: .85rem; }
+  /* Horizontal slider for the test request's token budget: flexes to fill the row,
+     with the live value read out beside it so the number is visible while dragging. */
+  .slider-label { font-weight: 600; font-size: .85rem; }
+  input[type=range] { flex: 1 1 180px; min-width: 140px; accent-color: #1a56db; }
+  .slider-value { font-family: ui-monospace, monospace; font-size: .85rem; min-width: 4ch; }
+    /* Wizard chrome. The breadcrumb is a real nav landmark. A locked step is inert rather
+     than merely dimmed — disabled plus pointer-events none — so a first visit cannot click
+     past a step it has not verified, while the title stays readable so the route ahead is
+      still legible. Completed steps report themselves with a check; plan-skipped steps are
+      muted but remain distinct from manual waivers. */
+  .crumbs { max-width: var(--page-width); box-sizing: border-box; margin: 18px auto -6px; padding: 0 16px; display: flex; flex-wrap: wrap; gap: 6px; list-style: none; font-size: .82rem; }
+  .crumbs li { display: flex; align-items: center; gap: 6px; }
+  .crumbs li + li::before { content: "›"; opacity: .45; }
+  .crumbs button { background: none; border: 1px solid transparent; border-radius: 999px; color: #20242b; padding: 4px 11px; font-size: .82rem; }
+  .crumbs button:disabled { opacity: .45; cursor: not-allowed; }
+  .crumbs li.done button { color: #0a7d33; }
+  .crumbs li.done button::after { content: " ✓"; }
+  .crumbs li.skipped button { color: #6b7280; font-style: italic; }
+  .crumbs li.skipped-by-plan button { color: #6b7280; font-style: normal; }
+  .crumbs li.current button { background: #e6ecf7; border-color: #b6c6e8; color: #0b2b6b; font-weight: 600; }
+  #step4.engine-control-disabled, #step4.engine-control-disabled * { color: #737373 !important; }
+  #step4.engine-control-disabled #step4Next { color: #fff !important; }
+  #step4.engine-control-disabled input::placeholder { color: #737373 !important; }
+  #step5.ready-screen:not([hidden]) { min-height: 60vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 20px; text-align: center; }
+  #step5.ready-screen h2 { margin: 0; font-size: 1.4rem; }
+  .step-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+  /* Screen 1's action stands alone and centred: it is one invitation to continue, and left-aligned
+     beside dead space it reads as one control of several. */
+  #step1 .step-actions { justify-content: center; }
+  .ghost { background: #fff; border: 1px solid #c6cbd4; color: #20242b; }
+  /* Cards nested in a step read as blocks within one screen, not as competing cards. */
+  .step > .card { background: #fbfcfd; border-color: #e5e7eb; }
+  /* The column is wide so that the deployment slides are readable, which is not a licence for a
+     paragraph to run 1600 px: the sentences here are the ordinary kind and stay at a measure a
+     reader's eye can cross back from (725 px at a 1600 px window). Only the prose directly on a screen
+     is capped -- the notes inside the cards take their card's width instead, so they measure less once
+     the row splits in two (663 px there). */
+  .step > p { max-width: 84ch; }
+    #step1 > p { max-width: none; }
+  /* The two cards on the welcome screen (and the pair on Platform ready) carried this class
+     with no rule behind it, so they stacked and their borders touched, reading as one panel. */
+  .grid2 { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  /* The plan this run follows is framed in the same active blue the design system uses for
+     .tbs-step-card--active (#3b82f6), so "which of these two is happening" is answered by the
+     layout and not only by the text line beneath. Written against `.step .card` so it wins
+     over the nested-card styling above (the cards sit inside `.grid2`, so a child selector
+     would not match them at all), and padded back down by the extra border weight so the
+     text does not shift out of line with the other card. */
+  .step .card.plan-card--current { border: 4px solid #3b82f6; background: #eff6ff; padding: 13px 15px; }
+  .step .card.plan-card--current h2 { color: #0b2b6b; }
+  /* The two deployment slides are 1600x900, far larger than a plan card, and are unreadable at the
+     ~310px the old 860px column gave them -- which is what prompted the wider page rather than the
+     other way round. They show as the card's illustration, side by side, at the width the card offers
+     and no more. Measured at screen 1 in a 1694px window: the computed tracks are `757px 757px 0px
+     0px` -- four tracks, the two the content did not fill collapsed to nothing, so the cards take half
+     the row each, which is what `auto-fit` does and is why the row still becomes one column in a narrow
+     window. Each card is then ~719px inside, so the slides sit at 721px and the cap is what limits
+     them. Farther down that is the card's job: at 1600, 1300, 1100 and 860px windows the slides
+     measured 714, 571, 471 and 351px, and in the single-column case 519px. So the cap is a size floor
+     for a slide going to a reader at arm's length, and the reason the prose under it is capped
+     separately. `height: auto` keeps the ratio from the file rather than a number written here, and the
+     width/height attributes on the tags keep the box at the right shape before the bytes land, so the
+     cards do not jump as they decode. */
+  .plan-diagram-link { display: block; margin: 0; }
+  /* Each slide is captioned with the one command that produces its topology, bold on a single
+     line: the plans differ in one token of the invocation, and that token is the whole decision,
+     so it is worth more than a paragraph of prose at a glance. `PLAN=` is capital deliberately --
+     the lowercase spelling you first typed is not a cosmetic variant: measured with `make -n`,
+     `make run plan=SaaS` selects docker-compose.plan-local.yml, so a caption reading that way
+     would label one topology with the command for the other. A `figure` with a genuine
+     `figcaption`, so the caption belongs to the image it names and travels with it. */
+  .plan-figure { margin: 0 0 12px; }
+  .plan-run-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: -8px; }
+  .plan-run-options { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 16px; margin-top: 14px; }
+  .plan-run-option { display: flex; align-items: center; justify-content: center; gap: 10px; min-width: 0; font: 700 1.05rem ui-monospace, monospace; }
+  .plan-run-option input[type="radio"] { appearance: none; display: grid; place-content: center; width: 16px; height: 16px; margin: 0; border: 1.5px solid #333; border-radius: 50%; opacity: 1; }
+  .plan-run-option input[type="radio"]::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #333; transform: scale(0); }
+  .plan-run-option input[type="radio"]:checked::before { transform: scale(1); }
+  /* The warning that used to be drawn on the slide, set in text instead: a claim that lives only
+     inside a PNG is invisible to a reader using a screen reader, to a renderer that skips images,
+     and to `make verify`, which cannot look inside one. Same amber as `.pill.warn`, and the
+     sentence states its own severity, so the colour is emphasis rather than the message. */
+  .plan-risk {
+    margin: 0 0 10px;
+    padding: 8px 11px;
+    border: 1px solid #f0d79a;
+    border-radius: 8px;
+    background: #fdf0d2;
+    color: #8a5b00;
+    font-size: .86rem;
+  }
+  .plan-diagram {
+    display: block;
+    width: 100%;
+    max-width: 720px;
+    height: auto;
+    border: 1px solid #d9dce2;
+    border-radius: 8px;
+    background: #fff;
+  }
+  .plan-diagram-link:focus-visible { outline: 2px solid #3b82f6; outline-offset: 2px; }
+  .pill { border-radius: 999px; padding: 2px 10px; font-size: .78rem; font-weight: 600; }
+  .pill.ok { background: #d9f2e3; color: #116439; }
+  .pill.err { background: #fbe3e3; color: #991c1c; }
+  .pill.warn { background: #fdf0d2; color: #8a5b00; }
+  pre { background: #f0f2f5; border-radius: 8px; padding: 10px; overflow-x: auto; font-size: .8rem; }
+  #status .line { margin: 3px 0; }
+  .muted { opacity: .65; font-size: .82rem; }
+  .operation-workspace { margin-top: 18px; }
+  .operation-tabs { display: flex; gap: 4px; border-bottom: 1px solid #cbd4d8; margin-bottom: 16px; }
+  .operation-tabs [role="tab"] { border-radius: 4px 4px 0 0; background: transparent; color: #344a52; }
+  .operation-tabs [aria-selected="true"] { background: #e5efed; box-shadow: inset 0 -3px #356b77; }
+  .operation-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-items: start; }
+  .operation-box { min-width: 0; padding: 16px; border: 1px solid #d6dfe2; border-radius: 6px; background: #fff; }
+  .operation-box > header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .operation-box h3 { margin: 0; font-size: 1.05rem; }
+  .operation-box p { line-height: 1.5; }
+  .operation-kicker { margin: 0 0 5px; color: #557078; font-size: .74rem; font-weight: 650; text-transform: uppercase; }
+  .operation-status { flex: 0 0 auto; padding: 3px 8px; border-radius: 3px; background: #edf1f2; color: #45575e; font-size: .76rem; font-weight: 600; }
+  .operation-status--readonly { background: #e4efeb; color: #315e50; }
+  .operation-empty { display: grid; min-height: 64px; place-items: center; padding: 12px; color: #5b6b72; background: #f5f7f8; text-align: center; }
+  .operation-field { display: grid; gap: 6px; margin: 14px 0; }
+  .operation-field label { font-size: .84rem; font-weight: 600; }
+  .operation-table-wrap { overflow-x: auto; }
+  .operation-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 14px; color: #56676e; font-size: .78rem; }
+  @media (max-width: 760px) {
+    .operation-grid { grid-template-columns: minmax(0, 1fr); }
+    .operation-tabs { overflow-x: auto; }
+    .operation-tabs [role="tab"] { white-space: nowrap; }
+    .operation-footer { align-items: flex-start; flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand-band" aria-hidden="true"></div>
+  <span class="logo-box" title="thalabus">
+    <img class="logo-image" src="/static/img/thalabus-logo.svg" alt="thalabus">
+  </span>
+  <span class="brand-name">thalabus</span>
+  <h1>Hack Apertus submission</h1>
+  <span class="header-sub">Track 2B · Apertus-powered prototype</span>
+  <span class="header-spacer"></span>
+  <span class="participant-name">Luca Strozzi</span>
+  <span class="event-plaque">
+    <img class="event-mark" src="/static/img/t2b-logo.png" alt="t2b">
+  </span>
+</header>
+ <nav aria-label="Guide progress">
+    <ol class="crumbs" id="crumbs"></ol>
+  </nav>
+  <main>
+  <!-- Screen 1: orientation, and the only screen that explains what the two plans differ in.
+       Stated before any button is pressed, because the plan decides which of the tests to come
+       are the app's own and which belong to the remote platform. -->
+  <section class="card step" id="step1">
+    <h2>Welcome</h2>
+    <p>This guide walks through the submission in the order its parts depend on each other: the model
+      endpoint, this app's own graph store, the retrieval models, then the Docker Engine address you
+      configured in <code>.env</code> — the same pair of variables the platform itself dials, and an
+      unreachable address here explains more about a stuck deployment than any log line. Operations
+      come last, and say plainly that they do not exist yet. Each step records what it observed, and
+      a step cannot be marked done while its own test is still failing.</p>
+    <div class="grid2">
+      <div class="card" data-plan-card="local">
+        <h2>Plan Local</h2>
+        <figure class="plan-figure">
+          <a class="plan-diagram-link" href="/static/img/Hackathon-Deployment-Local.png"
+             title="Open the full 1600 x 900 slide">
+            <img class="plan-diagram" src="/static/img/Hackathon-Deployment-Local.png" width="1600" height="900"
+              decoding="async"
+              alt="Plan Local deployment diagram: inside the hackathon environment the submission GUI calls
+              thalabus, which holds this submission's own configuration, data and documents and reaches an
+              embeddings service and a reranking service on the same machine; the AI models sit outside that
+              environment and are called over the network.">
+          </a>
+        </figure>
+        <p class="plan-risk">"make run" might take up to one hour to configure and validate, in an
+          untested and unconfigured host environment.</p>
+        <p class="step-note">The app, the official platform images, an embeddings server and a reranker run on this
+          machine, together with a graph store of this submission's own.</p>
+      </div>
+      <div class="card" data-plan-card="saas">
+        <h2>Plan SaaS</h2>
+        <figure class="plan-figure">
+          <a class="plan-diagram-link" href="/static/img/Hackathon-Deployment-SaaS.png"
+             title="Open the full 1600 x 900 slide">
+            <img class="plan-diagram" src="/static/img/Hackathon-Deployment-SaaS.png" width="1600" height="900"
+              decoding="async"
+              alt="Plan SaaS deployment diagram: the hackathon environment holds only the submission GUI and this
+              submission's local configuration in neo4j; thalabus, its data and documents, embeddings,
+              reranking and the AI models all run in thalabus's own environment in the t2b private data
+              center.">
+          </a>
+        </figure>
+        <p class="step-note">The app runs here against a thalabus platform instance you were given access to. The
+          platform runs its own graph store, embeddings and reranking; this submission keeps its own store so the
+          track's deliverable stays independent.</p>
+      </div>
+    </div>
+    <div class="plan-run-options" role="group" aria-label="Plan used by this run">
+      <label class="plan-run-option"><input type="radio" name="welcomePlan" value="local" disabled>
+        <span>make run</span></label>
+      <label class="plan-run-option"><input type="radio" name="welcomePlan" value="saas" disabled>
+        <span>make run PLAN=SaaS</span></label>
+    </div>
+    <div id="wizardPersistence" class="muted"></div>
+    <div class="step-actions">
+      <!-- Only this button is named after verification: it is the one that leads into the tests.
+           The later ones move between screens, and the last two are a readiness matrix and an
+           Ops screen that does not verify anything. -->
+      <button id="step1Next" type="button">Start Environment Verification</button>
+    </div>
+  </section>
+
+  <!-- Screen 2: the configured chat model test and the graph probe, required under both plans. -->
+  <section class="card step" id="step2" hidden>
+  <!-- The chat endpoint is configured by this app's LLM_* settings under both plans. -->
+  <section class="card" id="config" hidden>
+    <h2>Chat Model Endpoint <span id="cfgPill" class="pill warn">checking…</span></h2>
+    <div class="row"><span class="kv"><b>LLM_NAME</b> <span id="cfgName">–</span></span></div>
+    <div class="row"><span class="kv"><b>LLM_BASE_URL</b> <span id="cfgUrl">–</span></span></div>
+    <div class="row"><span class="kv"><b>LLM_API_KEY</b> <span id="cfgKey">–</span></span></div>
+    <div id="cfgHint" class="muted"></div>
+    <div class="row">
+      <input type="checkbox" id="thinking">
+      <label for="thinking">The model is natively thinking (emits reasoning; pre-filled from the model name, can be overridden)</label>
+    </div>
+    <div class="row">
+      <label class="slider-label" for="maxTokens">Max tokens (raw tokens)</label>
+      <input type="range" id="maxTokens" min="16" max="300000" step="8" value="80000">
+      <span id="maxTokensOut" class="slider-value">80000</span>
+    </div>
+    <div class="row">
+      <button id="testBtn" type="button">Test model — Hello World</button>
+      <span id="testPill"></span>
+    </div>
+    <!-- The checkbox and the slider are the request's two knobs and sit directly above
+         the button that uses them: the button proves the endpoint answers, the checkbox
+         says how to talk to it, the slider says how much of an answer to ask for. -->
+    <div class="row muted">Sends one chat completion to the endpoint above, using the two settings above. This budget is in
+      raw tokens — the unit of a chat completion, not the kilotokens a platform model entry stores for its budget. An
+      endpoint that cannot fit the request answers 400 with its own limit; the reply below shows it verbatim.</div>
+    <div id="status"></div>
+  </section>
+
+  <section class="card">
+    <h2>Local Graph Store <span id="dbPill" class="pill warn">checking…</span></h2>
+    <div class="row"><span class="kv"><b>Target</b> <span id="dbTarget">–</span></span></div>
+    <div class="row"><span class="kv"><b>Server</b> <span id="dbAgent">–</span></span></div>
+    <div class="row"><span class="kv"><b>Probe</b> <span id="dbProbe">–</span></span></div>
+    <div id="dbPlatformRow" class="row" hidden><span class="kv"><b>Platform's database</b> <span id="dbPlatform">–</span></span></div>
+    <div id="dbHint" class="muted"></div>
+    <div class="row"><button id="dbBtn" type="button">Re-check connection</button></div>
+  </section>
+
+    <div class="step-actions">
+      <button id="step2Back" class="ghost" type="button">Back</button>
+      <button id="step2Next" type="button" disabled>Continue</button>
+      <span id="step2Reason" class="step-note">Waiting for a configured model and a connected graph store.</span>
+    </div>
+  </section>
+
+  <!-- Screen 3: test the configured embeddings and reranking endpoints under either plan. -->
+  <section class="card step" id="step3" hidden>
+    <h2>Additional models</h2>
+    <p class="step-note">The chat model answers; these two serve retrieval. The embedding probe asks for two vectors
+      and checks they have the same length; the reranking probe asks which of three documents answers a question and
+      checks the relevant one outscores the distractor.</p>
+    <div class="grid2">
+      <div class="card">
+        <h2>Embeddings <span id="embPill" class="pill warn">not tested</span></h2>
+        <div class="row"><span class="kv"><b>Endpoint</b> <span id="embEndpoint">–</span></span></div>
+        <div class="row"><span class="kv"><b>Model</b> <span id="embModel">–</span></span></div>
+        <div class="row"><span class="kv"><b>API key</b> <span id="embKey">–</span></span></div>
+        <div class="row"><span class="kv"><b>Vectors</b> <span id="embCount">–</span></span>
+          <span class="kv"><b>Dimensions</b> <span id="embDims">–</span></span></div>
+        <div class="row"><span class="kv"><b>Latency</b> <span id="embLatency">–</span></span></div>
+        <div id="embDetail" class="muted"></div>
+      </div>
+      <div class="card">
+        <h2>Reranker <span id="rrPill" class="pill warn">not tested</span></h2>
+        <div class="row"><span class="kv"><b>Endpoint</b> <span id="rrEndpoint">–</span></span></div>
+        <div class="row"><span class="kv"><b>Model</b> <span id="rrModel">–</span></span></div>
+        <div class="row"><span class="kv"><b>API key</b> <span id="rrKey">–</span></span></div>
+        <div class="row"><span class="kv"><b>Scored</b> <span id="rrCount">–</span></span>
+          <span class="kv"><b>Top score</b> <span id="rrTop">–</span></span></div>
+        <div class="row"><span class="kv"><b>Ordering</b> <span id="rrOrder">–</span></span></div>
+        <div id="rrDetail" class="muted"></div>
+      </div>
+    </div>
+    <div class="step-actions">
+      <button id="step3Back" class="ghost" type="button">Back</button>
+      <button id="svcBtn" type="button">Test both services</button>
+      <button id="step3Next" type="button" disabled>Continue</button>
+      <span id="step3Reason" class="step-note">Not tested yet.</span>
+    </div>
+  </section>
+
+  <!-- Screen 4: Docker Engine is outside this hackathon's SaaS verification scope.
+       Plan Local may still probe the configured Engine address when explicitly enabled.
+       The SaaS view offers Continue without sending a request to any Engine. -->
+  <section class="card step" id="step4" hidden>
+    <h2>Docker Engine</h2>
+    <p id="step4Intro" class="step-note"><code>DOCKER_ENGINE_ADDR</code> and <code>DOCKER_ENGINE_PORT</code> — the pair the
+      platform itself is configured with, <code>host.docker.internal:2375</code> by default — are probed
+      with two read-only GETs (<code>/_ping</code>, <code>/version</code>) and nothing else: the Engine
+      API is root-equivalent, so no container operation is ever attempted and none is needed to name
+      an unreachable address.</p>
+    <div id="dockerProbeDetails">
+      <div class="row"><span class="kv"><b>Engine</b> <span id="dockerUrl">–</span>
+        <span id="dockerPill" class="pill warn">not tested</span></span></div>
+      <div class="row"><span class="kv"><b>Version</b> <span id="dockerVersion">–</span></span>
+        <span class="kv"><b>API</b> <span id="dockerApi">–</span></span>
+        <span class="kv"><b>Platform</b> <span id="dockerPlatform">–</span></span>
+        <span class="kv"><b>Latency</b> <span id="dockerLatency">–</span></span></div>
+      <div id="dockerDetail" class="muted"></div>
+    </div>
+    <div class="row" id="dockerWaiveRow"><input id="dockerWaiveReason" type="text" maxlength="200" style="flex:1; padding:6px 8px"
+      placeholder="If it must stay unreachable here: why you continue anyway"></div>
+    <div class="step-actions">
+      <button id="step4Back" class="ghost" type="button">Back</button>
+      <button id="step4Test" type="button">Test Engine</button>
+      <button id="step4Waive" class="ghost" type="button">Waive</button>
+      <button id="step4Next" type="button" disabled>Continue</button>
+      <span id="step4Reason" class="step-note">Not tested yet.</span>
+    </div>
+  </section>
+
+  <!-- Screen 5: completion confirmation before opening the operations mockups. -->
+  <section class="step ready-screen" id="step5" hidden>
+    <h2>Congratulations! You are all set.</h2>
+    <button id="step5Next" type="button">Continue</button>
+  </section>
+
+  <!-- Screen 6: operation mockups, split into three subpages. Each box is independently
+       rendered from its own Python module and styled by its own CSS file. -->
+  <section class="card step" id="step6" hidden>
+    <h2>Workspace</h2>
+    <div id="operationsApp" aria-live="polite">
+      <p class="step-note">Loading operation mockups…</p>
+    </div>
+  </section>
+</main>
+<script src="/static/js/kg_graph_view.js" defer></script>
+<script>
+const $ = (id) => document.getElementById(id);
+
+async function loadConfig() {
+  try {
+    const cfg = await (await fetch("/api/model/config")).json();
+    $("config").hidden = cfg.visible === false;
+    $("cfgName").textContent = cfg.name ?? "(not set)";
+    $("cfgUrl").textContent = cfg.base_url ?? "(not set)";
+    $("cfgKey").textContent = cfg.api_key_present ? "•••• (present)" : "(not set)";
+    $("thinking").checked = !!cfg.thinking_default;
+    // Screen 3's cards show what is configured before anything is tested: the model ids
+    // and, as on page 2, the key masked rather than shown. Plan Local probes its own
+    // in-network services with no key, so the flag comes from the server, not from here.
+    $("embModel").textContent = cfg.embeddings_model ?? "(not set)";
+    $("rrModel").textContent = cfg.reranker_model ?? "(not set)";
+    const retrievalKey = cfg.retrieval_key_present ? "•••• (present)" : "(not set)";
+    $("embKey").textContent = retrievalKey;
+    $("rrKey").textContent = retrievalKey;
+    const pill = $("cfgPill");
+    pill.textContent = cfg.name && cfg.base_url && cfg.api_key_present ? "configured" : "incomplete";
+    pill.className = "pill " + (cfg.name && cfg.base_url && cfg.api_key_present ? "ok" : "warn");
+    if (!(cfg.name && cfg.base_url && cfg.api_key_present)) {
+      $("cfgHint").textContent = "Set LLM_NAME / LLM_BASE_URL / LLM_API_KEY in your environment or .env, then rebuild (make run).";
+    }
+  } catch (e) {
+    $("cfgPill").textContent = "app unreachable"; $("cfgPill").className = "pill err";
+  }
+}
+
+async function testModel() {
+  const btn = $("testBtn"), pill = $("testPill"), status = $("status");
+  btn.disabled = true; pill.textContent = ""; status.textContent = "";
+  try {
+    const res = await fetch("/api/model/test", {
+      method: "POST", headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({thinking: $("thinking").checked, max_tokens: Number($("maxTokens").value)})
+    });
+    const data = await res.json();
+    const line = (label, val) => `<div class="line"><b>${label}:</b> <code>${val ?? "–"}</code></div>`;
+    if (data.ok) {
+      pill.innerHTML = `<span class="pill ok">reachable · auth ok</span>`;
+      // The echoed max_tokens is the server's clamped value, so what is shown here is
+      // what was actually sent — read it as a check on the slider, not a copy of it.
+      status.innerHTML = line("Model served", data.model_served)
+        + line("Max tokens", data.max_tokens)
+        + line("Latency", data.latency_ms + " ms")
+        + line("Reply", data.reply);
+    } else {
+      pill.innerHTML = `<span class="pill err">FAILED</span>`;
+      status.innerHTML = line("Error type", data.error?.type)
+        + line("Max tokens", data.max_tokens)
+        + `<pre>${(data.error?.message ?? "").replace(/</g, "&lt;")}</pre>`
+        + (data.latency_ms ? line("Time to failure", data.latency_ms + " ms") : "");
+    }
+  } catch (e) {
+    pill.innerHTML = `<span class="pill err">app error</span>`;
+    status.innerHTML = `<pre>${e}</pre>`;
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function loadDatabase() {
+  const pill = $("dbPill");
+  const btn = $("dbBtn");
+  pill.textContent = "checking…";
+  pill.className = "pill warn";
+  btn.disabled = true;
+
+  try {
+    // SaaS does not probe the remote platform database, so only show this row when a probe ran.
+    const db = await (await fetch("/api/neo4j/status")).json();
+    const failures = {
+      auth_failed: "credentials rejected",
+      driver_missing: "driver not installed",
+      not_configured: "not configured",
+      bad_uri: "URI not usable",
+      service_unavailable: "not reachable",
+      unauthorized: "database not permitted"
+    };
+    const kind = (db.error || {}).type || "unknown";
+    $("dbTarget").textContent = db.target || "(not set)";
+    $("dbAgent").textContent = db.server_agent || "–";
+    $("dbProbe").textContent = db.reachable
+      ? "RETURN 1 AS ok -> ok in " + db.latency_ms + " ms"
+      : "no query could be run";
+    const platformDatabase = db.platform_database;
+    $("dbPlatformRow").hidden = !platformDatabase?.requested;
+    $("dbPlatform").textContent = platformDatabaseLine(platformDatabase);
+    pill.textContent = db.reachable ? "connected" : (failures[kind] || kind);
+    pill.className = "pill " + (db.reachable ? "ok" : "err");
+    $("dbHint").textContent = db.hint || (db.databases && db.databases.length
+      ? "Databases this user can see: " + db.databases.join(", ")
+      : "");
+  } catch (error) {
+    pill.textContent = "status unavailable";
+    pill.className = "pill err";
+    $("dbHint").textContent = "Could not read /api/neo4j/status: " + error;
+  } finally {
+    btn.disabled = false;
+    await loadWizard(false);
+  }
+}
+
+// Five answers, kept apart on purpose. The row above this one is about the submission's own
+// store; this one is about the platform's, and a server that answers is not the same fact as
+// the platform's database existing on it. "not asked" is spelled out rather than left blank so
+// an absent check can never be read as a failed one.
+function platformDatabaseLine(pd) {
+  if (!pd || !pd.requested) { return ""; }
+  if ((pd.error || {}).type === "same_store_as_app") {
+    return "not probed — its address is this app's own database";
+  }
+  if (!pd.reachable) {
+    return "not reachable at " + (pd.uri || "(no address)");
+  }
+  const visible = (pd.databases || []).length ? (pd.databases || []).join(", ") : "none";
+  if (!pd.exists) {
+    return "server answers, " + pd.database + " not among: " + visible;
+  }
+  return "reachable at " + pd.uri + ", " + pd.database + " present (" + pd.latency_ms + " ms)";
+}
+
+$("testBtn").addEventListener("click", testModel);
+$("maxTokens").addEventListener("input", () => { $("maxTokensOut").textContent = $("maxTokens").value; });
+$("dbBtn").addEventListener("click", loadDatabase);
+// ---- Wizard ---------------------------------------------------------------------------
+// The server owns the flow (src/app/wizard.py); this renders it. A locked breadcrumb is
+// disabled client-side too, but that is politeness, not the control: the server refuses a
+// locked transition no matter what is clicked here.
+let WIZ = null;
+let platform = null;
+
+async function wizardFetch(url, options) {
+  const res = await fetch(url, options);
+  return await res.json();
+}
+
+function setWizPill(id, ok, okText, badText) {
+  const el = $(id);
+  el.className = `pill ${ok ? "ok" : "err"}`;
+  el.textContent = ok ? okText : badText;
+}
+
+function renderCrumbs() {
+  const list = $("crumbs");
+  list.innerHTML = "";
+  if (!WIZ) return;
+  for (const step of WIZ.steps) {
+    const li = document.createElement("li");
+    li.dataset.stepKey = step.key;
+    li.className = step.number === WIZ.current_step ? "current"
+      : (step.status === "completed" ? "done" : step.status);
+    if (step.skipped_by_plan) { li.classList.add("skipped-by-plan"); }
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.textContent = `${step.number}. ${step.title}`;
+    btn.disabled = !step.unlocked;
+    if (step.reason) { btn.title = step.reason; }
+    if (step.number === WIZ.current_step) { btn.setAttribute("aria-current", "step"); }
+    btn.addEventListener("click", () => gotoStep(step.number));
+    li.appendChild(btn);
+    list.appendChild(li);
+  }
+}
+
+function showStep(number) {
+  for (let n = 1; n <= 6; n++) {
+    const el = $("step" + n);
+    if (el) { el.hidden = n !== number; }
+  }
+  renderCrumbs();
+  window.scrollTo({ top: 0 });
+}
+
+async function loadWizard(showResult) {
+  try {
+    WIZ = await wizardFetch("/api/wizard");
+    platform = await wizardFetch("/api/platform/status");
+  } catch (error) {
+    $("wizardPersistence").textContent = "app unreachable";
+    return;
+  }
+  document.querySelectorAll('input[name="welcomePlan"]').forEach((radio) => {
+    radio.checked = radio.value === WIZ.plan;
+  });
+  // Framed by the plan the *server* reports, not by anything clicked here: the highlight has to
+  // agree with the tests the guide is about to run, and this screen changes no setting.
+  document.querySelectorAll("[data-plan-card]").forEach((card) => {
+    card.classList.toggle("plan-card--current", card.dataset.planCard === WIZ.plan);
+  });
+  const p = WIZ.persistence || {};
+  // Only what changed about this run's state is said here. Which of the two plans a step was
+  // proved on has to be visible, because the reader watched that screen be green a moment ago.
+  // Where progress is kept is stated once, on the screen that acts on it ("Wizard state" on
+  // Platform ready): the node's Cypher syntax in the welcome text answered no question a reader
+  // arriving with no state had.
+  const forgottenSteps = p.forgotten_steps || [];
+  const stateNotes = [];
+  // A migrated flow is the one case where the guide resumes on a step the reader believes
+  // they passed: said here, at the point they notice, rather than silently.
+  if (p.migration_note) { stateNotes.push(p.migration_note); }
+  if (forgottenSteps.length) {
+    stateNotes.push(`Step ${forgottenSteps.join(" and ")} was verified on the other plan and is asked again here — `
+      + (p.forgotten_reason || "evidence does not cross plans."));
+  }
+  $("wizardPersistence").textContent = stateNotes.join(" ");
+  const step = (WIZ.steps || []).find((s) => s.number === WIZ.current_step) || WIZ.steps[0];
+  applyStepState(step);
+  if (showResult && step) { showStep(step.number); }
+  // Entering the Engine screen reads the address once per page load, through the GET that
+  // marks nothing: the screen states where things stand, and only the button records a result.
+  // With control disabled there is nothing to read, so the probe is not even attempted.
+  if (step && step.number === 4 && !WIZ.engine_verified && !dockerAutoProbed && WIZ.engine_control_enabled !== false) {
+    dockerAutoProbed = true;
+    probeDocker("GET").catch(() => { renderDockerUnreachable(); });
+  }
+  if (step && step.number === 6) {
+    loadOperationsMockups();
+  }
+}
+
+let operationsMockupsLoaded = false;
+const INGESTION_SELECTION_STORAGE_KEY = "track2b-workspace-ingestion-selection";
+let ingestionPollTimer = null;
+let latestIngestionProgress = { running: false, active_document: null, percent: 0 };
+
+async function loadOperationsMockups() {
+  const host = $("operationsApp");
+  if (!host) { return; }
+  if (operationsMockupsLoaded) {
+    await refreshSampleDocuments(host);
+    refreshKgExtractionDocuments(host);
+    return;
+  }
+  try {
+    const response = await fetch("/api/operations/mockups");
+    if (!response.ok) { throw new Error(`HTTP ${response.status}`); }
+    host.innerHTML = await response.text();
+    operationsMockupsLoaded = true;
+    refreshKgExtractionDocuments(host);
+    host.addEventListener("change", (event) => {
+      if (event.target.matches("[data-categorization-selection]")) {
+        host.querySelectorAll("[data-categorization-selection]").forEach((box) => {
+          box.checked = box === event.target;
+        });
+        const picked = host.querySelector("[data-categorization-selection]:checked");
+        saveCategorizationSelection(picked ? picked.value : "");
+        updateCategorizationButton(host);
+        return;
+      }
+      if (event.target.id === "category-inference-document") {
+        const inferToggle = host.querySelector("#category-infer-button");
+        if (inferToggle) { inferToggle.disabled = !event.target.value; }
+        renderCategoryPickers(host, categoryWorkspaceDocuments);
+        return;
+      }
+      if (event.target.id === "kg-extraction-document") {
+        const extractToggle = host.querySelector("#kg-extract-button");
+        if (extractToggle) { extractToggle.disabled = !event.target.value; }
+        return;
+      }
+      if (event.target.matches("[data-ingest-selection]")) {
+        const selection = getIngestionSelection();
+        if (event.target.checked) { selection.add(event.target.value); }
+        else { selection.delete(event.target.value); }
+        saveIngestionSelection(selection);
+        updateIngestionSelectionStatus(host, selection, latestIngestionProgress);
+        return;
+      }
+      if (event.target.id !== "operation-upload-files") { return; }
+      const files = [...event.target.files];
+      const status = host.querySelector("#operation-upload-status");
+      const button = host.querySelector("[data-upload-documents]");
+      status.textContent = files.length ? `${files.length} file${files.length === 1 ? "" : "s"} selected` : "No files selected";
+      button.disabled = files.length === 0;
+    });
+    host.addEventListener("click", async (event) => {
+      const categoriesButton = event.target.closest("[data-refresh-categories]");
+      if (categoriesButton) {
+        categoriesButton.disabled = true;
+        try {
+          await refreshCategoryInspection(host);
+        } finally {
+          categoriesButton.disabled = false;
+        }
+        return;
+      }
+      const inferButton = event.target.closest("[data-infer-categories]");
+      if (inferButton) {
+        const picker = host.querySelector("#category-inference-document");
+        await runCategorySkill(host, "infer", picker ? picker.value : "");
+        return;
+      }
+      const applyButton = event.target.closest("[data-apply-categories]");
+      if (applyButton) {
+        const picked = host.querySelector("[data-categorization-selection]:checked");
+        await runCategorySkill(host, "apply", picked ? picked.value : "");
+        return;
+      }
+      const extendButton = event.target.closest("[data-extend-ontology]");
+      if (extendButton) {
+        const picker = host.querySelector("#category-extension-document");
+        await runOntologyExtension(host, picker ? picker.value : "");
+        return;
+      }
+      const approveButton = event.target.closest("[data-approve-category]");
+      if (approveButton) {
+        await approveProposedCategory(host, approveButton);
+        return;
+      }
+      const metamodelButton = event.target.closest("[data-refresh-metamodel]");
+      if (metamodelButton) {
+        metamodelButton.disabled = true;
+        try {
+          await refreshKgMetamodel(host);
+        } finally {
+          metamodelButton.disabled = false;
+        }
+        return;
+      }
+      const kgExtractButton = event.target.closest("[data-kg-extract]");
+      if (kgExtractButton) {
+        const picker = host.querySelector("#kg-extraction-document");
+        kgExtractButton.disabled = true;
+        try {
+          await startKgExtraction(host, picker ? picker.value : "");
+        } finally {
+          kgExtractButton.disabled = false;
+        }
+        return;
+      }
+      const ingestionButton = event.target.closest("#start-ingestion-button");
+      if (ingestionButton) {
+        const names = [...getIngestionSelection()];
+        if (!names.length) { return; }
+        ingestionButton.disabled = true;
+        host.querySelector("#ingestion-selection-status").textContent = "Starting ingestion…";
+        try {
+          const response = await fetch("/api/operations/documents/ingest", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({documents: names})
+          });
+          const payload = await response.json();
+          if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+          await refreshSampleDocuments(host);
+        } catch (error) {
+          host.querySelector("#ingestion-selection-status").textContent = `Ingestion failed to start: ${error.message}`;
+          ingestionButton.disabled = false;
+        }
+        return;
+      }
+      const uploadButton = event.target.closest("[data-upload-documents]");
+      if (uploadButton) {
+        const input = host.querySelector("#operation-upload-files");
+        const status = host.querySelector("#operation-upload-status");
+        const files = [...input.files];
+        if (!files.length) { return; }
+        const formData = new FormData();
+        files.forEach((file) => formData.append("files", file));
+        uploadButton.disabled = true;
+        status.textContent = "Uploading documents…";
+        try {
+          const result = await fetch("/api/operations/documents", { method: "POST", body: formData });
+          const payload = await result.json();
+          if (!result.ok) { throw new Error(payload.detail || `HTTP ${result.status}`); }
+          input.value = "";
+          status.textContent = `${payload.uploaded.length} document${payload.uploaded.length === 1 ? "" : "s"} uploaded`;
+          await refreshSampleDocuments(host);
+        } catch (error) {
+          status.textContent = `Upload failed: ${error.message}`;
+        } finally {
+          uploadButton.disabled = input.files.length === 0;
+        }
+        return;
+      }
+      const chatButton = event.target.closest("#chat-ask-button");
+      if (chatButton) {
+        await askChatOperation(host);
+        return;
+      }
+      const button = event.target.closest("[data-operation-page]");
+      if (!button) { return; }
+      const page = button.dataset.operationPage;
+      host.querySelectorAll("[data-operation-panel]").forEach((panel) => {
+        panel.hidden = panel.dataset.operationPanel !== page;
+      });
+      host.querySelectorAll("[data-operation-page]").forEach((tab) => {
+        const selected = tab === button;
+        tab.setAttribute("aria-selected", String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      if (page === "categories") {
+        refreshCategoryWorkspace(host).catch(() => {});
+      }
+    });
+    host.addEventListener("input", (event) => {
+      if (event.target.id !== "chat-question") { return; }
+      const askButton = host.querySelector("#chat-ask-button");
+      if (askButton && !askButton.dataset.awaiting) { askButton.disabled = event.target.value.trim().length === 0; }
+    });
+    host.addEventListener("keydown", (event) => {
+      if (event.target.id === "chat-question" && (event.ctrlKey || event.metaKey) && event.key === "Enter") {
+        event.preventDefault();
+        askChatOperation(host);
+      }
+    });
+    await refreshSampleDocuments(host);
+    await refreshKgMetamodel(host);
+    await refreshCategoryWorkspace(host);
+  } catch (error) {
+    host.textContent = `Could not load operation mockups: ${error}`;
+  }
+}
+
+let chatRequestInFlight = false;
+
+async function askChatOperation(host) {
+  if (chatRequestInFlight) { return; }
+  const input = host.querySelector("#chat-question");
+  const button = host.querySelector("#chat-ask-button");
+  const status = host.querySelector("#chat-status");
+  const note = host.querySelector("#chat-note");
+  const modeSelect = host.querySelector("#chat-mode");
+  const mode = modeSelect && modeSelect.value === "advanced" ? "advanced" : "simple";
+  const question = input ? input.value.trim() : "";
+  if (!question) { return; }
+  chatRequestInFlight = true;
+  if (note && !note.dataset.resting) { note.dataset.resting = note.textContent; }
+  const restingNote = note && note.dataset.resting ? note.dataset.resting : "";
+  button.disabled = true;
+  button.dataset.awaiting = "1";
+  status.textContent = "Asking\u2026";
+  if (note) { note.textContent = mode === "advanced" ? "Embedding \u2192 search \u2192 rerank \u2192 seeds \u2192 affinity expansion \u2192 pair judge \u2192 re-rank \u2192 generate" : "Embedding \u2192 vector search \u2192 rerank \u2192 generate"; }
+  clearChatPlaceholder(host);
+  appendChatTurn(host, "user", question, null, null);
+  let stage = "";
+  try {
+    const response = await fetch("/api/operations/chat", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({question, mode})
+    });
+    const payload = await response.json();
+    if (!response.ok) {
+      stage = payload && payload.error && payload.error.code ? `Failed at ${payload.error.code}.` : "";
+      const detail = payload && payload.detail ? payload.detail : `HTTP ${response.status}`;
+      throw new Error(typeof detail === "string" ? detail : JSON.stringify(detail));
+    }
+    let meta = payload.answer_source === "llm"
+      ? `${payload.candidates} fragments retrieved \u00b7 ${payload.passed_threshold} passed the 50% rerank floor \u00b7 answered by the chat model`
+      : `${payload.candidates} fragments retrieved \u00b7 none passed the 50% rerank floor`;
+    if (payload.mode === "advanced" && payload.expansion) {
+      const expansion = payload.expansion;
+      meta += ` \u00b7 advanced: ${(expansion.documents || []).length} reached by expansion, ${(expansion.rejections || []).length} rejected`;
+      if (expansion.cached) {
+        meta += ` \u00b7 ${expansion.cached} pair check(s) reused from stored verdicts`;
+      }
+      for (const rejection of (expansion.rejections || []).slice(0, 3)) {
+        meta += ` \u00b7 rejected ${rejection.document}: ${String(rejection.reason || "").slice(0, 90)}`;
+      }
+      if ((expansion.notes || []).length) {
+        meta += ` \u00b7 ${expansion.notes[0]}`;
+      }
+    }
+    appendChatTurn(host, "assistant", payload.answer, payload.citations || [], meta);
+    status.textContent = "Answered";
+    if (note) {
+      const stages = payload.timings_ms || {};
+      const total = Object.values(stages).reduce((sum, value) => sum + (Number(value) || 0), 0);
+      note.textContent = total > 0 ? `${restingNote} \u00b7 server took ${Math.round(total)} ms` : restingNote;
+    }
+    input.value = "";
+    button.disabled = true;
+  } catch (error) {
+    appendChatTurn(host, "error", String(error && error.message ? error.message : error), null, null);
+    status.textContent = "Failed";
+    if (note) { note.textContent = stage || "Ask again \u2014 the stage that failed is quoted above."; }
+  } finally {
+    delete button.dataset.awaiting;
+    button.disabled = !input.value.trim();
+    chatRequestInFlight = false;
+  }
+}
+
+function clearChatPlaceholder(host) {
+  const empty = host.querySelector("#chat-transcript .chat-empty");
+  if (empty) { empty.remove(); }
+}
+
+function appendChatTurn(host, role, text, citations, meta) {
+  const transcript = host.querySelector("#chat-transcript");
+  if (!transcript) { return; }
+  clearChatPlaceholder(host);
+  const turn = document.createElement("div");
+  turn.className = `chat-message chat-message--${role}`;
+  const who = document.createElement("p");
+  who.className = "chat-who";
+  who.textContent = role === "user" ? "You" : role === "assistant" ? "Thalabus \u00b7 RAG" : "Error";
+  const body = document.createElement("p");
+  body.className = "chat-body";
+  body.textContent = String(text ?? "");
+  turn.append(who, body);
+  if (citations && citations.length) {
+    const list = document.createElement("ol");
+    list.className = "chat-citation-list";
+    turn.classList.add("has-citations");
+    [...citations].sort((left, right) => (Number(left.ordinal) || 0) - (Number(right.ordinal) || 0)).forEach((citation) => {
+      const item = document.createElement("li");
+      const score = Math.max(0, Math.min(1, Number(citation.score) || 0)) * 100;
+      const heading = document.createElement("strong");
+      heading.textContent = `[${Number(citation.ordinal) || 0}] ${citation.document} \u00b7 rerank ${score.toFixed(0)}%` + (citation.entered_by && citation.entered_by !== "seed" ? ` \u00b7 ${citation.entered_by}` : "");
+      let reference = heading;
+      if (citation.url) {
+        const link = document.createElement("a");
+        link.href = String(citation.url);
+        link.target = "_blank";
+        link.rel = "noopener";
+        link.title = "Open the document in a new tab";
+        link.append(heading);
+        reference = link;
+      }
+      const excerpt = document.createElement("span");
+      excerpt.className = "chat-citation-excerpt";
+      excerpt.textContent = citation.excerpt || "";
+      item.append(reference, document.createTextNode(" "), excerpt);
+      list.append(item);
+    });
+    turn.append(list);
+  }
+  if (meta) {
+    const metaLine = document.createElement("p");
+    metaLine.className = "chat-meta";
+    metaLine.textContent = meta;
+    turn.append(metaLine);
+  }
+  transcript.append(turn);
+  transcript.scrollTop = transcript.scrollHeight;
+}
+
+async function refreshKgMetamodel(host) {
+  const rows = host.querySelector("#kg-metamodel-rows");
+  const source = host.querySelector("#kg-metamodel-source");
+  if (!rows || !source) { return; }
+  try {
+    const response = await fetch("/api/operations/kg/metamodel");
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    const elements = payload.elements || [];
+    const escape = (value) => String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    const fragment = document.createDocumentFragment();
+    elements.forEach((element) => {
+      const kind = element.kind === "Relationship" ? "Relationship" : "Entity";
+      const sourceLabels = element.source_labels || [];
+      const targetLabels = element.target_labels || [];
+      const endpoints = sourceLabels.length && targetLabels.length
+        ? `${escape(sourceLabels[0])} → ${escape(targetLabels[0])}`
+        : "";
+      // One row per property; an element that declares none still gets a row
+      // saying so, so it is never silently missing from the table.
+      const attributes = (element.attributes && element.attributes.length) ? element.attributes : [null];
+      attributes.forEach((attribute, index) => {
+        const row = document.createElement("tr");
+        let html = "";
+        if (index === 0) {
+          const elementDescription = element.description
+            ? `<div class="kg-element-description">${escape(element.description)}</div>`
+            : "";
+          html += `<td class="kg-cell-element" rowspan="${attributes.length}"><strong>${escape(element.name)}</strong>${elementDescription}</td>`
+            + `<td class="kg-cell-type" rowspan="${attributes.length}">${kind}${endpoints ? `<div class="kg-edge-endpoints">${endpoints}</div>` : ""}</td>`;
+        }
+        if (attribute) {
+          html += `<td><code>${escape(attribute.name)}</code> <span class="kg-attr-type">${escape(attribute.type)}</span></td>`
+            + `<td class="kg-attr-description">${escape(attribute.description)}</td>`;
+        } else {
+          const emptyLabel = kind === "Relationship" ? "No properties declared" : "No attributes declared";
+          html += `<td class="kg-attr-none">${emptyLabel}</td><td class="kg-attr-description">—</td>`;
+        }
+        row.innerHTML = html;
+        fragment.append(row);
+      });
+    });
+    rows.replaceChildren(fragment);
+    const entityCount = elements.filter((element) => element.kind === "Entity").length;
+    const relationshipCount = elements.filter((element) => element.kind === "Relationship").length;
+    const attributeCount = elements.reduce((total, element) => total + (element.attributes || []).length, 0);
+    source.textContent = `${entityCount} entities · ${relationshipCount} relationships · ${attributeCount} attributes — ` + (payload.source === "platform" ? "live from the platform" : "bundled snapshot");
+    source.title = payload.note || "";
+  } catch (error) {
+    rows.innerHTML = '<tr><td colspan="4">Metamodel could not be loaded.</td></tr>';
+    source.textContent = `Metamodel load failed: ${error.message}`;
+  }
+}
+
+let kgExtractionPollTimer = null;
+
+async function refreshKgExtractionDocuments(host) {
+  const picker = host.querySelector("#kg-extraction-document");
+  const note = host.querySelector("#kg-extraction-note");
+  if (!picker) { return; }
+  try {
+    const response = await fetch("/api/operations/kg/extraction/documents");
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    if (payload.ok === false) {
+      const errorInfo = payload.error || {};
+      throw new Error(`${errorInfo.type || "error"}: ${errorInfo.message || "extraction list unavailable"}`);
+    }
+    renderKgExtractionPicker(host, payload.documents || []);
+  } catch (error) {
+    picker.replaceChildren(new Option("Extraction unavailable", ""));
+    picker.disabled = true;
+    const button = host.querySelector("#kg-extract-button");
+    if (button) { button.disabled = true; }
+    if (note) { note.textContent = `Extraction list failed: ${error.message}`; }
+  }
+  restoreKgExtractionState(host);
+}
+
+function renderKgExtractionPicker(host, documents) {
+  const picker = host.querySelector("#kg-extraction-document");
+  if (!picker) { return; }
+  const previous = picker.value;
+  picker.replaceChildren(new Option("Select a document", ""));
+  documents.forEach((documentInfo) => picker.append(new Option(`${documentInfo.name} (${documentInfo.status})`, documentInfo.id || documentInfo.name)));
+  picker.disabled = documents.length === 0;
+  picker.value = documents.some((documentInfo) => (documentInfo.id || documentInfo.name) === previous) ? previous : "";
+  const button = host.querySelector("#kg-extract-button");
+  if (button) { button.disabled = !picker.value; }
+  const note = host.querySelector("#kg-extraction-note");
+  if (note && !documents.length) { note.textContent = "No document is extractable right now - ingest and extract text first."; }
+}
+
+async function startKgExtraction(host, name) {
+  if (!name) { return; }
+  const status = host.querySelector("#kg-extraction-status");
+  const preview = host.querySelector("#kg-extraction-preview");
+  const button = host.querySelector("#kg-extract-button");
+  if (status) { status.textContent = "Starting..."; }
+  try {
+    const response = await fetch("/api/operations/kg/extraction", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({document: name})
+    });
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    pollKgExtraction(host);
+  } catch (error) {
+    if (status) { status.textContent = "Failed"; }
+    if (preview) {
+      preview.className = "box-error";
+      preview.textContent = `Extraction failed to start: ${error.message}`;
+    }
+    if (button) { button.disabled = false; }
+  }
+}
+
+function pollKgExtraction(host) {
+  if (kgExtractionPollTimer !== null) { return; }
+  kgExtractionPollTimer = window.setInterval(async () => {
+    try {
+      const response = await fetch("/api/operations/kg/extraction/state");
+      const state = await response.json();
+      renderKgExtractionState(host, state);
+      if (!state.running) {
+        window.clearInterval(kgExtractionPollTimer);
+        kgExtractionPollTimer = null;
+        refreshKgExtractionDocuments(host);
+      }
+    } catch (error) {
+      const status = host.querySelector("#kg-extraction-status");
+      if (status) { status.textContent = "State unavailable"; }
+    }
+  }, 1500);
+}
+
+async function restoreKgExtractionState(host) {
+  try {
+    const response = await fetch("/api/operations/kg/extraction/state");
+    const state = await response.json();
+    renderKgExtractionState(host, state);
+    if (state.running) { pollKgExtraction(host); }
+  } catch (error) {
+    // The state read is best-effort; the extraction itself runs server-side regardless.
+  }
+}
+
+function renderKgExtractionState(host, state) {
+  const status = host.querySelector("#kg-extraction-status");
+  const preview = host.querySelector("#kg-extraction-preview");
+  const button = host.querySelector("#kg-extract-button");
+  if (!status || !preview) { return; }
+  if (state.running) {
+    status.textContent = `${state.phase} ${state.percent}%`;
+    return;
+  }
+  if (state.error) {
+    status.textContent = "Failed";
+    const errorInfo = state.error || {};
+    preview.className = "box-error";
+    preview.textContent = `Extraction failed (${errorInfo.type || state.phase || "error"}): ${errorInfo.message || "unknown error"}`;
+    if (button) { button.disabled = !host.querySelector("#kg-extraction-document")?.value; }
+    return;
+  }
+  if (state.phase === "done" && state.result) {
+    status.textContent = `Done: ${state.result.entity_count} entities, ${state.result.relationship_count} links`;
+    renderKgExtractionResult(preview, state.result);
+    if (button) { button.disabled = !host.querySelector("#kg-extraction-document")?.value; }
+  }
+}
+
+function renderKgExtractionResult(container, result) {
+  const escape = categoryEscape;
+  const groups = Object.entries(result.entities_by_type || {});
+  const groupsHtml = groups.map(([entityType, names]) =>
+    `<details class="kg-extraction-group" open><summary>${escape(entityType)} (${names.length})</summary><ul>${names.map((name) => `<li>${escape(name)}</li>`).join("")}</ul></details>`).join("");
+  const relationshipsHtml = (result.relationships || []).map((relation) =>
+    `<tr><td class="kg-extraction-rel">${escape(relation.type)}</td><td>${escape(relation.source_id)} -> ${escape(relation.target_id)}</td></tr>`).join("");
+  const notesHtml = (result.notes || []).length ? `<p class="kg-extraction-warning">${result.notes.map(escape).join(" | ")}</p>` : "";
+  const communityHtml = `Community <code>${escape(result.community_id)}</code>`;
+  container.className = "kg-extraction-result";
+  container.innerHTML = `<p class="kg-extraction-result-title">${escape(result.document)} - ontology ${escape(result.ontology_id)} - ${result.entities.length} entities, ${(result.relationships || []).length} relationships</p>`
+    + `<p>${communityHtml}</p>`
+    + groupsHtml
+    + (relationshipsHtml ? `<div class="operation-table-wrap"><table><thead><tr><th>Relationship</th><th>Entities</th></tr></thead><tbody>${relationshipsHtml}</tbody></table></div>` : `<p class="kg-extraction-warning">No relationship matched the ontology's declared pairs in this text.</p>`)
+    + notesHtml;
+}
+
+const CATEGORIZATION_SELECTION_STORAGE_KEY = "t2b.categorization.document";
+let categoryWorkspaceDocuments = [];
+
+async function refreshCategoryWorkspace(host) {
+  const picker = host.querySelector("#category-inference-document");
+  const inferButton = host.querySelector("#category-infer-button");
+  const extensionPicker = host.querySelector("#category-extension-document");
+  const extendButton = host.querySelector("#category-extend-button");
+  if (picker) { picker.disabled = true; }
+  if (inferButton) { inferButton.disabled = true; }
+  if (extensionPicker) { extensionPicker.disabled = true; }
+  if (extendButton) { extendButton.disabled = true; }
+  try {
+    const [categories, documents] = await Promise.all([
+      fetch("/api/operations/categories").then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+        return payload;
+      }),
+      fetch("/api/operations/documents").then(async (response) => {
+        const payload = await response.json();
+        if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+        return payload.documents || [];
+      })
+    ]);
+    renderCategoryInspectionFromPayload(host, categories);
+    categoryWorkspaceDocuments = documents;
+    renderCategoryPickers(host, documents);
+  } catch (error) {
+    // A failed load cannot answer which documents exist, so the picker and the
+    // propose button stay disabled and the box says why instead of showing stale rows.
+    const results = host.querySelector("#category-inference-results");
+    const note = host.querySelector("#category-inspection-note");
+    if (results) { results.className = "box-error"; results.textContent = `Category workspace load failed: ${error.message}`; }
+    if (note) { note.textContent = `Category load failed: ${error.message}`; }
+  }
+}
+
+async function refreshCategoryInspection(host) {
+  try {
+    const response = await fetch("/api/operations/categories");
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    renderCategoryInspectionFromPayload(host, payload);
+  } catch (error) {
+    const body = host.querySelector("#category-inspection-body");
+    const note = host.querySelector("#category-inspection-note");
+    if (body) { body.innerHTML = '<tr><td colspan="3">Categories could not be loaded.</td></tr>'; }
+    if (note) { note.textContent = `Category load failed: ${error.message}`; }
+  }
+}
+
+function renderCategoryInspectionFromPayload(host, payload) {
+  const body = host.querySelector("#category-inspection-body");
+  const note = host.querySelector("#category-inspection-note");
+  if (!body) { return; }
+  const categories = payload.categories || [];
+  const escape = categoryEscape;
+  if (!categories.length) {
+    body.innerHTML = `<tr><td colspan="3">${(payload.error ? escape(`${payload.error.type}: ${payload.error.message}`) : "No categories found in this graph.")}</td></tr>`;
+  } else {
+    body.replaceChildren(...categories.map((category) => {
+      const row = document.createElement("tr");
+      const lov = (category.lov || []).length ? ` · values: ${escape(category.lov.join(", "))}` : "";
+      row.innerHTML = `<td><strong>${escape(category.name)}</strong>${category.proposed ? "<span class=\"category-proposed-badge\">proposed</span>" : ""} <button type="button" class="category-approve-button" data-approve-category="${escape(category.id || "")}">Approve</button></td>`
+        + `<td>${escape(category.description || "—")}${lov ? `<div class="category-inspection-lov">${lov}</div>` : ""}</td>`
+        + `<td>${category.documents}</td>`;
+      if (!category.proposed) {
+        row.querySelector("[data-approve-category]").remove();
+      }
+      return row;
+    }));
+  }
+  if (note) {
+    const approvedCount = categories.filter((category) => !category.proposed).length;
+    const proposedCount = categories.length - approvedCount;
+    note.textContent = `Inspection only · ${approvedCount} categories in ontology "${payload.ontology_id || "?"}"` + (proposedCount ? ` · ${proposedCount} awaiting review` : "");
+  }
+}
+
+function categoryInferenceEligible(documentInfo) {
+  // The picker lists files whose matched platform document awaits categorisation.
+  // platform_status is the Document.status of that platform document — deliberately
+  // not this app's ingest status and not knowledge_graph_status, which tracks the
+  // separate KG-extraction workflow.
+  return documentInfo.platform_status === "NeedsCategorization";
+}
+
+function renderCategoryPickers(host, documents) {
+  const picker = host.querySelector("#category-inference-document");
+  const list = host.querySelector("#categorization-document-list");
+  const selectable = documents.filter((documentInfo) => categoryInferenceEligible(documentInfo));
+  if (picker) {
+    const previous = picker.value || getCategorizationSelection();
+    picker.replaceChildren(new Option("Select a document", ""));
+    selectable.forEach((documentInfo) => picker.append(new Option(documentInfo.name, documentInfo.name)));
+    picker.disabled = selectable.length === 0;
+    picker.value = selectable.some((documentInfo) => documentInfo.name === previous) ? previous : "";
+    const inferButton = host.querySelector("#category-infer-button");
+    if (inferButton) { inferButton.disabled = picker.disabled || !picker.value; }
+    const results = host.querySelector("#category-inference-results");
+    const selected = selectable.find((documentInfo) => documentInfo.name === picker.value);
+    if (results && !picker.value) {
+      results.className = "operation-empty";
+      results.textContent = selectable.length ? "Select a document to propose its categories." : "No sample document awaits categorisation on the platform — ingest one first.";
+    } else if (selected && (selected.proposed_categories || []).length) {
+      renderCategoryResult(results, {categories: selected.proposed_categories, mode: "stored"}, "Stored proposal");
+    }
+  }
+  const extensionPicker = host.querySelector("#category-extension-document");
+  if (extensionPicker) {
+    const previousExtension = extensionPicker.value;
+    extensionPicker.replaceChildren(new Option("Select a document", ""));
+    selectable.forEach((documentInfo) => extensionPicker.append(new Option(documentInfo.name, documentInfo.name)));
+    extensionPicker.disabled = selectable.length === 0;
+    extensionPicker.value = selectable.some((documentInfo) => documentInfo.name === previousExtension) ? previousExtension : "";
+    const extendButton = host.querySelector("#category-extend-button");
+    if (extendButton) { extendButton.disabled = extensionPicker.disabled || !extensionPicker.value; }
+  }
+  if (list) {
+    const selectedName = getCategorizationSelection();
+    list.replaceChildren();
+    if (!documents.length) {
+      const empty = document.createElement("li");
+      empty.textContent = "No documents uploaded.";
+      list.append(empty);
+    } else {
+      documents.forEach((documentInfo) => {
+        const item = document.createElement("li");
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.categorizationSelection = "";
+        checkbox.value = documentInfo.name;
+        checkbox.checked = documentInfo.name === selectedName;
+        item.append(checkbox);
+        const label = document.createElement("span");
+        label.className = "categorization-document-name";
+        label.textContent = documentInfo.name;
+        const status = document.createElement("span");
+        // Show the document's categorisation status: the matched platform document's
+        // status when there is one (the picker's own eligibility source), else the
+        // local ingestion status. Sample docs match a platform NeedsCategorization
+        // document while their local record is still NotYetProcessed or Failed.
+        const shownStatus = documentInfo.platform_status && documentInfo.platform_status !== "n/a" ? documentInfo.platform_status : (documentInfo.status || "unknown");
+        status.className = `categorization-document-status status-${shownStatus.toLowerCase()}`;
+        const assigned = Number(documentInfo.assigned_categories || 0);
+        const proposed = (documentInfo.proposed_categories || []).length;
+        status.textContent = `${shownStatus}${assigned ? ` · ${assigned} assigned` : ""}${proposed ? ` · ${proposed} proposed` : ""}`;
+        item.append(label, status);
+        list.append(item);
+      });
+    }
+    updateCategorizationButton(host);
+  }
+}
+
+async function runCategorySkill(host, mode, name) {
+  const button = host.querySelector(mode === "infer" ? "#category-infer-button" : "#categorize-apply-button");
+  const status = host.querySelector(mode === "infer" ? "#category-inference-status" : "#categorization-status");
+  const results = host.querySelector(mode === "infer" ? "#category-inference-results" : "#categorization-results");
+  if (!name) { return; }
+  if (button) { button.disabled = true; }
+  if (status) { status.textContent = mode === "infer" ? "Proposing…" : "Categorising…"; }
+  try {
+    const response = await fetch(`/api/operations/categories/${mode}`, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({document: name})
+    });
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    if (status) { status.textContent = mode === "infer" ? `Proposed: ${(payload.categories || []).length}` : `Applied: ${payload.applied || 0}`; }
+    renderCategoryResult(results, payload, mode === "infer" ? "Proposal (not stored as assignment)" : "Stored categories");
+    await refreshCategoryWorkspace(host);
+    refreshKgExtractionDocuments(host);
+  } catch (error) {
+    if (status) { status.textContent = "Failed"; }
+    if (results) {
+      results.className = "box-error";
+      results.textContent = `${mode === "infer" ? "Proposal" : "Categorisation"} failed: ${error.message}`;
+    }
+  } finally {
+    // Gate both mode buttons through the one renderer: eligible documents and the
+    // current selection decide the state, so a finished-or-failed run can never
+    // leave a button enabled for a document the picker no longer offers.
+    renderCategoryPickers(host, categoryWorkspaceDocuments);
+  }
+}
+
+async function runOntologyExtension(host, name) {
+  const button = host.querySelector("#category-extend-button");
+  const status = host.querySelector("#category-extension-status");
+  const results = host.querySelector("#category-extension-results");
+  if (!name) { return; }
+  if (button) { button.disabled = true; }
+  if (status) { status.textContent = "Proposing…"; }
+  try {
+    const response = await fetch("/api/operations/categories/extend", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({document: name})
+    });
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    if (status) { status.textContent = `Flagged: ${payload.created || 0}${payload.skipped ? ` · skipped ${payload.skipped}` : ""}`; }
+    renderExtensionResult(results, payload);
+    await refreshCategoryWorkspace(host);
+  } catch (error) {
+    if (status) { status.textContent = "Failed"; }
+    if (results) {
+      results.className = "box-error";
+      results.textContent = `Ontology proposal failed: ${error.message}`;
+    }
+  } finally {
+    renderCategoryPickers(host, categoryWorkspaceDocuments);
+  }
+}
+
+function renderExtensionResult(container, payload) {
+  if (!container) { return; }
+  const escape = categoryEscape;
+  const proposals = payload.proposals || [];
+  const rejected = payload.rejected || [];
+  container.className = "category-result";
+  if (!proposals.length && !rejected.length) {
+    container.textContent = "The extension prompt found nothing new to add (a valid outcome).";
+    return;
+  }
+  const rows = proposals.map((proposal) => `<tr><td><strong>${escape(proposal.text_en)}</strong><span class="category-proposed-badge">proposed</span>${proposal.id ? ` <button type="button" class="category-approve-button" data-approve-category="${escape(proposal.id)}">Approve</button>` : ""}</td><td>${escape(proposal.description || "—")}${proposal.lov ? `<div class="category-inspection-lov">${escape(proposal.lov)}</div>` : ""}</td></tr>`).join("");
+  const rejects = rejected.length ? `<details><summary>${rejected.length} proposal${rejected.length === 1 ? "" : "s"} rejected</summary><ul>${rejected.map((reason) => `<li>${escape(reason)}</li>`).join("")}</ul></details>` : "";
+  container.innerHTML = `<p class="category-result-title">New proposals (flagged, not yet usable) · ${escape(payload.document || "")}</p>`
+    + `<div class="operation-table-wrap"><table><thead><tr><th>Category</th><th>Description</th></tr></thead><tbody>${rows}</tbody></table></div>${rejects}`;
+}
+
+async function approveProposedCategory(host, button) {
+  const id = button.dataset.approveCategory;
+  if (!id) { return; }
+  button.disabled = true;
+  try {
+    const response = await fetch("/api/operations/categories/approve", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({category_id: id})
+    });
+    const payload = await response.json();
+    if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+    await refreshCategoryInspection(host);
+  } catch (error) {
+    button.disabled = false;
+    const note = host.querySelector("#category-extension-note");
+    if (note) { note.textContent = `Approval failed: ${error.message}`; }
+  }
+}
+
+function renderCategoryResult(container, payload, title) {
+  if (!container) { return; }
+  const escape = categoryEscape;
+  const categories = payload.categories || [];
+  const rejected = payload.rejected || [];
+  container.className = "category-result";
+  if (!categories.length && !rejected.length) {
+    container.textContent = `${title}: the document matches no ontology category (a valid outcome).`;
+    return;
+  }
+  const rows = categories.map((category) => `<tr><td><strong>${escape(category.name)}</strong></td><td>${category.value ? escape(category.value) : "—"}</td></tr>`).join("");
+  const rejects = rejected.length ? `<details><summary>${rejected.length} suggested value${rejected.length === 1 ? "" : "s"} rejected</summary><ul>${rejected.map((reason) => `<li>${escape(reason)}</li>`).join("")}</ul></details>` : "";
+  container.innerHTML = `<p class="category-result-title">${escape(title)} · ${escape(payload.document || "")} · status ${escape(payload.status || "?")}</p>`
+    + `<div class="operation-table-wrap"><table><thead><tr><th>Category</th><th>Value</th></tr></thead><tbody>${rows}</tbody></table></div>${rejects}`;
+}
+
+function categoryEscape(value) {
+  return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function getCategorizationSelection() {
+  try {
+    return localStorage.getItem(CATEGORIZATION_SELECTION_STORAGE_KEY) || "";
+  } catch (error) {
+    return "";
+  }
+}
+
+function saveCategorizationSelection(name) {
+  try {
+    localStorage.setItem(CATEGORIZATION_SELECTION_STORAGE_KEY, name || "");
+  } catch (error) {
+    // Selection remains active for this render even if browser storage is unavailable.
+  }
+}
+
+function updateCategorizationButton(host) {
+  const button = host.querySelector("#categorize-apply-button");
+  if (button) { button.disabled = !host.querySelector("[data-categorization-selection]:checked"); }
+}
+
+async function refreshSampleDocuments(host) {
+  const [response, progressResponse] = await Promise.all([
+    fetch("/api/operations/documents"),
+    fetch("/api/operations/ingestion/progress")
+  ]);
+  const [payload, progress] = await Promise.all([response.json(), progressResponse.json()]);
+  if (!response.ok) { throw new Error(payload.detail || `HTTP ${response.status}`); }
+  if (!progressResponse.ok) { throw new Error(progress.detail || `HTTP ${progressResponse.status}`); }
+  latestIngestionProgress = progress;
+  syncIngestionPolling(host, progress);
+  const list = host.querySelector("#sample-document-list");
+  const documents = payload.documents || [];
+  const counts = { Ready: 0, NotYetProcessed: 0, Processing: 0, Failed: 0 };
+  documents.forEach((documentInfo) => {
+    if (Object.hasOwn(counts, documentInfo.status)) { counts[documentInfo.status] += 1; }
+  });
+  host.querySelector("#sample-document-ready-count").textContent = String(counts.Ready);
+  host.querySelector("#sample-document-pending-count").textContent = String(counts.NotYetProcessed);
+  host.querySelector("#sample-document-processing-count").textContent = String(counts.Processing);
+  host.querySelector("#sample-document-failed-count").textContent = String(counts.Failed);
+  const availableDocuments = new Set(documents.map((documentInfo) => documentInfo.name));
+  const selection = new Set([...getIngestionSelection()].filter((name) => availableDocuments.has(name)));
+  saveIngestionSelection(selection);
+  updateIngestionSelectionStatus(host, selection, progress);
+  list.replaceChildren();
+  if (!documents.length) {
+    const empty = document.createElement("tr");
+    const emptyCell = document.createElement("td");
+    emptyCell.colSpan = 5;
+    emptyCell.textContent = "No documents uploaded.";
+    empty.append(emptyCell);
+    list.append(empty);
+  } else {
+    documents.forEach((documentInfo) => {
+      const row = document.createElement("tr");
+      const chooser = document.createElement("td");
+      const isActive = progress.running && progress.active_document === documentInfo.name;
+      if (isActive) {
+        const percent = document.createElement("span");
+        percent.className = "sample-document-progress";
+        percent.setAttribute("role", "status");
+        percent.textContent = `${progress.percent}%`;
+        chooser.append(percent);
+      } else {
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.dataset.ingestSelection = "";
+        checkbox.value = documentInfo.name;
+        checkbox.checked = selection.has(documentInfo.name);
+        checkbox.disabled = progress.running;
+        checkbox.setAttribute("aria-label", `Select ${documentInfo.name} for ingestion`);
+        chooser.append(checkbox);
+      }
+      const name = document.createElement("td");
+      const link = document.createElement("a");
+      link.href = `/api/operations/documents/${encodeURIComponent(documentInfo.name)}`;
+      link.target = "_blank";
+      link.rel = "noopener noreferrer";
+      link.textContent = documentInfo.name;
+      name.append(link);
+      // The id is the platform's own, resolved by the server from this filename, so a
+      // sample that only ever lived here shows `n/a` rather than an invented number.
+      const documentId = String(documentInfo.platform_document_id || "n/a");
+      const idCell = document.createElement("td");
+      idCell.className = "sample-document-id" + (documentId === "n/a" ? " sample-document-id--none" : "");
+      idCell.textContent = documentId;
+      idCell.title = documentId === "n/a"
+        ? "No document with this filename in the graph"
+        : "This document's id in the platform's graph, matched by filename";
+      const metadata = document.createElement("td");
+      metadata.className = "sample-document-metadata";
+      metadata.textContent = formatDocumentSize(documentInfo.size_bytes);
+      const status = document.createElement("td");
+      const statusPill = document.createElement("span");
+      statusPill.className = "sample-document-status";
+      statusPill.textContent = documentInfo.platform_status || "n/a";
+      statusPill.title = "Document.status in the matched platform graph";
+      status.append(statusPill);
+      row.append(chooser, name, idCell, metadata, status);
+      list.append(row);
+    });
+  }
+}
+
+function getIngestionSelection() {
+  let storedSelection = [];
+  try {
+    storedSelection = JSON.parse(localStorage.getItem(INGESTION_SELECTION_STORAGE_KEY) || "[]");
+  } catch (error) {
+    storedSelection = [];
+  }
+  const selection = Array.isArray(storedSelection) ? storedSelection.filter((name) => typeof name === "string") : [];
+
+  return new Set(selection);
+}
+
+function saveIngestionSelection(selection) {
+  try {
+    localStorage.setItem(INGESTION_SELECTION_STORAGE_KEY, JSON.stringify([...selection]));
+  } catch (error) {
+    // Selection remains active for this render even if browser storage is unavailable.
+  }
+}
+
+function updateIngestionSelectionStatus(host, selection, progress) {
+  const status = host.querySelector("#ingestion-selection-status");
+  const startButton = host.querySelector("#start-ingestion-button");
+  status.textContent = progress.running
+    ? `Ingesting ${progress.active_document || "documents"} · ${progress.percent}% (${progress.completed}/${progress.total})`
+    : `${selection.size} selected for ingestion`;
+  startButton.disabled = selection.size === 0 || progress.running;
+}
+
+function syncIngestionPolling(host, progress) {
+  if (progress.running && ingestionPollTimer === null) {
+    ingestionPollTimer = window.setInterval(() => {
+      refreshSampleDocuments(host).catch((error) => {
+        host.querySelector("#ingestion-selection-status").textContent = `Progress unavailable: ${error.message}`;
+      });
+    }, 500);
+  } else if (!progress.running && ingestionPollTimer !== null) {
+    window.clearInterval(ingestionPollTimer);
+    ingestionPollTimer = null;
+  }
+}
+
+function formatDocumentSize(sizeBytes) {
+  if (sizeBytes < 1024) { return `${sizeBytes} B`; }
+  if (sizeBytes < 1024 * 1024) { return `${(sizeBytes / 1024).toFixed(1)} KB`; }
+
+  return `${(sizeBytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+// One place decides what a step's footer looks like, so the reason a Continue button is
+// dead is the reason the server gave rather than a second rule invented here.
+let dockerAutoProbed = false;
+
+function applyStepState(step) {
+  if (!step) return;
+
+  const step2 = $("step2Next"), step2Reason = $("step2Reason");
+  if (step2) {
+    const step2View = (WIZ.steps.find((s) => s.number === 2) || {});
+    const llmOk = WIZ.llm_verified || WIZ.llm_configured;
+    const proofs2 = llmOk && WIZ.graph_verified;
+    step2.disabled = !(step2View.completed || proofs2);
+    const missing = [];
+    if (!llmOk) { missing.push("a configured model"); }
+    if (!WIZ.graph_verified) { missing.push("a connected graph store"); }
+    step2Reason.textContent = step2View.completed ? "Verified in this run."
+      : (proofs2 ? "Model configured and graph store connected." : `Waiting for ${missing.join(" and ")}.`);
+  }
+
+  const services = (WIZ.steps.find((s) => s.number === 3) || {});
+  const step3 = $("step3Next"), step3Reason = $("step3Reason"), svcBtn = $("svcBtn");
+  if (step3) {
+    step3.disabled = !(services.completed || WIZ.services_verified);
+    svcBtn.disabled = false;
+    svcBtn.title = "";
+    step3Reason.textContent = services.completed ? "Verified in this run." : "Run the tests above to continue.";
+  }
+
+  const docker = (WIZ.steps.find((s) => s.number === 4) || {});
+  const step4 = $("step4Next"), step4Reason = $("step4Reason"), dockerBtn = $("step4Test"), waiveBtn = $("step4Waive");
+  const engineSkipped = docker.skipped_by_plan;
+  dockerBtn.hidden = engineSkipped;
+  waiveBtn.hidden = engineSkipped;
+  $("dockerWaiveRow").hidden = engineSkipped;
+  $("dockerProbeDetails").hidden = engineSkipped;
+  $("step4").classList.toggle("engine-control-disabled", !engineSkipped && WIZ.engine_control_enabled === false);
+  if (step4) {
+    step4.disabled = !(docker.completed || docker.skipped_by_plan || WIZ.engine_verified);
+    if (engineSkipped) {
+      $("step4Intro").textContent = "not required in this hackathon. Continue to the next step.";
+      $("dockerPill").className = "pill warn";
+      $("dockerPill").textContent = "not required in this hackathon";
+      step4.disabled = false;
+      step4Reason.textContent = "not required in this hackathon. Press Continue.";
+    } else if (WIZ.engine_control_enabled === false) {
+      // Control is switched off for this deployment: nothing to test, nothing to waive,
+      // and the server has lifted the step's gate to match -- Continue is the only action.
+      dockerBtn.disabled = true;
+      waiveBtn.disabled = true;
+      dockerBtn.title = docker.reason || "Docker Engine control is disabled for this deployment";
+      $("dockerPill").className = "pill warn";
+      $("dockerPill").textContent = "not necessary for this use case";
+      step4.disabled = false;
+      step4Reason.textContent = "Docker Engine control is disabled (DOCKER_ENGINE_CONTROL_ENABLE=false): nothing to test here — press Continue.";
+    } else if (docker.skipped_by_plan) {
+      dockerBtn.disabled = true;
+      waiveBtn.disabled = true;
+      dockerBtn.title = docker.reason || "";
+      step4Reason.textContent = "Not part of this plan — the Engine belongs to the platform's own host, so nothing here tests it.";
+    } else if (WIZ.engine_verified) {
+      step4Reason.textContent = "Engine answered as one, in this run.";
+    } else if (docker.completed) {
+      // Status says skipped, not completed: the breadcrumb shows the same words.
+      step4Reason.textContent = docker.reason || "Waived on this run: the step was moved past, not passed.";
+    }
+  }
+
+  // Offered on both plans: this button concerns the submission's own container, which
+  // exists either way. Hiding it under Plan SaaS would also make it unreachable under
+  // Plan Local on a machine without the model services, because screen 6 waits past both.
+  const box = $("restartBox");
+  if (box) { box.hidden = false; }
+
+  const saved = $("readySaved");
+  if (saved) {
+    const per = WIZ.persistence || {};
+    // Three different facts, and a returning reader needs the right one: this run wrote
+    // something, this run read a previous one, or neither has happened yet.
+    saved.textContent = per.last_written_at ? `written to the graph store at ${per.last_written_at}`
+      : (per.restored_at ? `restored from the graph store (written ${per.restored_at})`
+        : "not written yet — the graph store has not answered a probe");
+    if ((per.forgotten_steps || []).length) {
+      saved.textContent += " — " + (per.forgotten_reason || "one step dropped on a plan switch");
+    }
+  }
+
+  const readyPlatform = $("readyPlatform");
+  if (readyPlatform && platform) {
+    // Reachability only. Whether a token is present is the reader's own arrangement with
+    // the operator, and the hint below says so in the platform's words.
+    readyPlatform.textContent = `${platform.reachable ? "reachable" : "unreachable"}`
+      + (platform.http_status ? ` (HTTP ${platform.http_status})` : "")
+      + ` at ${platform.base_url || "no address set"}`
+      + (platform.configured ? " · token set" : " · no platform token set");
+  }
+
+  const summary = $("readySummary");
+  if (summary) {
+    summary.innerHTML = (WIZ.steps || []).map((s) => {
+      const mark = s.status === "skipped" ? "skipped" : (s.completed ? "done" : "open");
+      return `<div class="line"><b>${s.number}. ${s.title}</b> — <code>${mark}</code>${s.reason ? ` <span class="muted">${s.reason}</span>` : ""}</div>`;
+    }).join("");
+  }
+}
+
+async function gotoStep(number) {
+  const result = await wizardFetch(`/api/wizard/goto/${number}`, { method: "POST" });
+  if (result.ok) {
+    await loadWizard(true);
+  } else {
+    alert(result.error?.message || "could not open that step");
+  }
+}
+
+async function completeStep(number) {
+  const result = await wizardFetch(`/api/wizard/steps/${number}/complete`, { method: "POST" });
+  if (result.ok) {
+    await loadWizard(true);
+    if (result.persistence && result.persistence.written) {
+      $("wizardPersistence").textContent = "Progress saved to the graph store.";
+    }
+    return;
+  }
+  $("step2Reason").textContent = result.error?.message || "the server refused this step";
+  await loadWizard(true);
+}
+
+async function testModelServices() {
+  const btn = $("svcBtn");
+  btn.disabled = true;
+  $("step3Reason").textContent = "Testing…";
+  try {
+    const data = await wizardFetch("/api/wizard/model-services", { method: "POST" });
+    const emb = data.embeddings, rr = data.reranker;
+    if (!data.applicable) {
+      $("step3Reason").textContent = (data.error || {}).message || "not applicable on this plan";
+      return;
+    }
+    if (emb) {
+      setWizPill("embPill", emb.ok, "ok", "failed");
+      $("embEndpoint").textContent = emb.endpoint || "–";
+      $("embCount").textContent = emb.count ?? "–";
+      $("embDims").textContent = emb.dimensions ?? "–";
+      $("embLatency").textContent = emb.latency_ms != null ? emb.latency_ms + " ms" : "–";
+      $("embDetail").textContent = emb.ok ? `${emb.model} · ${emb.dimensions} dimensions` : `${(emb.error || {}).type}: ${(emb.error || {}).message || ""}`;
+    }
+    if (rr) {
+      setWizPill("rrPill", rr.ok, "ok", "failed");
+      $("rrEndpoint").textContent = rr.endpoint || "–";
+      $("rrCount").textContent = rr.count ?? "–";
+      $("rrTop").textContent = rr.top_relevance != null ? rr.top_relevance.toFixed(4) : "–";
+      $("rrOrder").textContent = rr.ranking_correct == null ? "–" : (rr.ranking_correct ? "relevant first" : "wrong order");
+      $("rrDetail").textContent = rr.ok ? `${rr.model} · relevant document outscored the distractor` : `${(rr.error || {}).type}: ${(rr.error || {}).message || ""}`;
+    }
+    // The test only tests: the endpoint already recorded the verdict, which lights up
+    // Continue. Completing the step is Continue's job, as on every other screen, so a
+    // passing test no longer yanks the reader onto the next page before they read the cards.
+    $("step3Reason").textContent = data.ok
+      ? "Both services answered as expected — press Continue."
+      : "Something failed; the reason is in the card above. The step stays open until it passes.";
+    await loadWizard(false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// The Engine screen's one action. POST marks the step from the probe's own verdict;
+// GET reads the same answer without marking, used when the screen opens.
+async function probeDocker(method) {
+  const pill = $("dockerPill"), detail = $("dockerDetail");
+  pill.className = "pill warn";
+  pill.textContent = "probing…";
+  try {
+    const data = await wizardFetch(method === "POST" ? "/api/wizard/docker-test" : "/api/docker/status",
+                                   { method });
+    renderDocker(data);
+    await loadWizard(false);
+  } catch (error) { /* wizardFetch already surfaced it */ }
+}
+
+function renderDocker(data) {
+  const eng = data.engine || {}, cfg = data.config || {};
+  $("dockerUrl").textContent = cfg.base_url || "–";
+  const pill = $("dockerPill"), detail = $("dockerDetail");
+  $("dockerVersion").textContent = eng.engine_version || (eng.api_version ? "API " + eng.api_version : "–");
+  $("dockerApi").textContent = eng.api_version ? `v${eng.api_version} (min v${eng.min_api_version || "?"})` : "–";
+  $("dockerPlatform").textContent = eng.platform_name || "–";
+  $("dockerLatency").textContent = eng.latency_ms != null ? eng.latency_ms + " ms" : "–";
+  if (eng.ok) {
+    pill.className = "pill ok";
+    pill.textContent = "Docker Engine" + (eng.engine_version ? " · " + eng.engine_version : "");
+    detail.textContent = eng.reply_fragment ? `Answered: ${eng.reply_fragment}` : "Answered as a Docker Engine.";
+  } else if (!eng.asked) {
+    pill.className = "pill warn";
+    pill.textContent = WIZ?.plan === "saas" ? "not required in this hackathon" : "not this plan";
+    detail.textContent = WIZ?.plan === "saas" ? "" : ((eng.error || {}).message || "");
+  } else {
+    pill.className = "pill err";
+    pill.textContent = (eng.error || {}).type || "failed";
+    detail.textContent = `${(eng.error || {}).message || ""} — tried ${eng.requested || cfg.base_url || "?"}`;
+  }
+  $("step4Reason").textContent = eng.ok ? "Engine answered and identified itself."
+    : (eng.asked ? eng.hint || "Failed, for the reason above."
+      : (WIZ?.plan === "saas" ? "not required in this hackathon. Press Continue." : "Skipped by this plan — no request is made at all."));
+}
+
+async function dockerWaive() {
+  const reason = $("dockerWaiveReason").value || "";
+  const detail = $("dockerDetail");
+  try {
+    const data = await wizardFetch("/api/wizard/docker/waive", { method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({ reason }) });
+    detail.textContent = data.ok
+      ? (data.step ? data.step.reason : "Waived.")
+      : `Not waived: ${(data.error || {}).message || "the server refused"}`;
+    await loadWizard(false);
+  } catch (error) { /* wizardFetch already surfaced it */ }
+}
+
+function renderDockerUnreachable() {
+  const pill = $("dockerPill");
+  pill.className = "pill err";
+  pill.textContent = "app unreachable";
+  $("dockerDetail").textContent = "The submission's own API did not answer, so the Engine was never asked.";
+}
+
+async function restartApp() {
+  const btn = $("restartBtn"), pill = $("restartPill"), detail = $("restartDetail");
+  btn.disabled = true;
+  pill.innerHTML = `<span class="pill warn">restarting…</span>`;
+  detail.textContent = "";
+  try {
+    const data = await wizardFetch("/api/admin/restart", { method: "POST" });
+    if (!data.ok) {
+      pill.innerHTML = `<span class="pill err">not restarted</span>`;
+      detail.textContent = `${(data.error || {}).message || ""} ${(data.note || "")}`.trim();
+      btn.disabled = false;
+      return;
+    }
+    detail.innerHTML = `<div class="line muted">Ending this process; Docker starts the container again. `
+      + `First check in 6 s, then every 2 s.</div>`;
+    // The container is back in about a second, and a process that is being asked to stop
+    // still answers one final request. A probe at 2 s therefore succeeds, and the next one
+    // fails -- which used to be reported as "the container is gone" for a restart that had
+    // worked. The first wait is longer than the restart takes, so only a new process can
+    // answer it, and the number shown is the time actually spent waiting.
+    let elapsed = 0;
+    for (let attempt = 0; attempt < 60; attempt++) {
+      const wait = attempt === 0 ? 6 : 2;
+      await new Promise((resolve) => setTimeout(resolve, wait * 1000));
+      elapsed += wait;
+      try {
+        const health = await (await fetch("/api/health")).json();
+        // /api/health answers with `status: "ok"` -- the compose healthcheck reads the same
+        // field. Testing a field the endpoint does not send would poll sixty times, then
+        // declare the restart failed when it had in fact succeeded.
+        if (health.status === "ok" || health.ok) {
+          pill.innerHTML = `<span class="pill ok">back up</span>`;
+          detail.innerHTML = `<div class="line muted">Restarted in about ${elapsed} s. The page reloads now.</div>`;
+          setTimeout(() => window.location.reload(), 1200);
+          return;
+        }
+      } catch (notYet) { /* container still starting */ }
+    }
+    pill.innerHTML = `<span class="pill err">did not come back</span>`;
+    detail.textContent = "Restart the app from the host instead: make run PLAN=local";
+  } catch (error) {
+    pill.innerHTML = `<span class="pill err">app error</span>`;
+    detail.textContent = String(error);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function startOver() {
+  const data = await wizardFetch("/api/wizard/reset", { method: "POST" });
+  await loadWizard(true);
+  showStep(1);
+}
+
+// The welcome screen has nothing to verify, so its button *completes* step 1 (the server has no
+// gate on it) rather than `gotoStep(2)`: forward goto is refused by design while step 1 is not
+// completed, which used to pop up "step 2 is still locked" and leave the reader stuck here.
+$("step1Next").addEventListener("click", () => completeStep(1));
+$("step2Back").addEventListener("click", () => gotoStep(1));
+$("step2Next")?.addEventListener("click", () => completeStep(2));
+$("step3Back").addEventListener("click", () => gotoStep(2));
+$("svcBtn").addEventListener("click", testModelServices);
+$("step3Next")?.addEventListener("click", () => completeStep(3));
+$("step4Back").addEventListener("click", () => gotoStep(3));
+$("step4Test")?.addEventListener("click", () => probeDocker("POST"));
+$("step4Waive")?.addEventListener("click", dockerWaive);
+$("step4Next")?.addEventListener("click", () => completeStep(4));
+$("step5Next")?.addEventListener("click", () => completeStep(5));
+$("restartBtn")?.addEventListener("click", restartApp);
+
+loadConfig();
+loadDatabase();
+loadWizard(true);
+</script>
+</body>
+</html>

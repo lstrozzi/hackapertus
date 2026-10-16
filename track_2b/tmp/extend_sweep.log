@@ -1,0 +1,38 @@
+documents=39 flagged_before=0
+  1/39 068597ae400f  121.7s created=3 skipped=0 rejected=0 new=DOCUMENT_TYPE,SUBJECT_MATTER,QUESTION_TYPE
+  2/39 06c357e3bc65  128.5s created=3 skipped=0 rejected=0 new=INQUIRY_TYPE,DATA_REQUESTED,COMPARATIVE_METRIC
+  3/39 16b412342ff4  123.1s created=3 skipped=0 rejected=0 new=SESSION_DATE,LEGISLATIVE_BODY,LEGISLATIVE_ISSUE_STATUS
+  4/39 1d6f8ca0c4cc  141.6s created=3 skipped=0 rejected=0 new=REQUEST_TYPE,ENERGY_FUNDING,SOLAR_ENERGY_POTENTIAL
+  5/39 24afc76fc2a6   74.7s RemoteProtocolError: Server disconnected without sending a response.
+  6/39 27d452b5ea80    0.0s RemoteProtocolError: Server disconnected without sending a response.
+  7/39 328f8b9bd057    0.0s RemoteProtocolError: Server disconnected without sending a response.
+  8/39 35838b6e9c5c    0.0s ReadError: [WinError 10053] An established connection was aborted by the software in your host machine
+  9/39 3cedaed8b24e    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 10/39 3f454e2bd4b1    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 11/39 416ed5353579    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 12/39 4868a2ab971d    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 13/39 4c3b23a3cc25    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 14/39 4d7c58aa17a8    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 15/39 50cfed561534    0.0s ReadError: [WinError 10053] An established connection was aborted by the software in your host machine
+ 16/39 5a633229e7a4    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 17/39 5e0f372e082c    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 18/39 5e3f6a87ed89    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 19/39 61b0de578851    0.0s ReadError: [WinError 10053] An established connection was aborted by the software in your host machine
+ 20/39 62222f630981    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 21/39 67baad6a2896    0.0s ReadError: [WinError 10053] An established connection was aborted by the software in your host machine
+ 22/39 6bbfabbdb410    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 23/39 73bd3780ab61    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 24/39 75991a32bfbd    0.0s RemoteProtocolError: Server disconnected without sending a response.
+ 25/39 7e0476f8f977    0.0s ReadError: [WinError 10053] An established connection was aborted by the software in your host machine
+ 26/39 7f8551e9f545    1.0s RemoteProtocolError: Server disconnected without sending a response.
+ 27/39 8978592394b5  101.7s created=2 skipped=0 rejected=1 new=STAKEHOLDER_GROUP,CONSULTATION_STATUS
+ 28/39 908dbecf2235  180.1s HTTP 504 llm_timeout: No reply within 180s.
+ 29/39 917a4f0d7e53  128.6s created=3 skipped=0 rejected=1 new=DOCUMENT_SUBJECT,INQUIRY_ISSUE,ADDRESSEE
+ 30/39 93566d6e9539  107.8s created=3 skipped=0 rejected=0 new=RESPONSE_TYPE,DATA_AVAILABILITY_STATUS,GOVERNANCE_LEVEL
+ 31/39 9872d0bcc1cc  180.1s HTTP 504 llm_timeout: No reply within 180s.
+ 32/39 a8bd424660d7  126.4s created=3 skipped=0 rejected=0 new=ANSWER_TYPE,INQUIRY_SUBJECT,STATISTICAL_DATA_PRESENT
+ 33/39 c8e02925cd2a  112.1s created=3 skipped=0 rejected=0 new=LEGISLATIVE_PROPOSAL_TYPE,EDUCATION_POLICY,VOCATIONAL_TRAINING_SUPPORT
+ 34/39 d3bb597067f5  115.3s created=3 skipped=0 rejected=0 new=SOCIAL_WELFARE_INSTRUMENT,POLICY_PROPOSAL,FAMILY_SUPPORT_MEASURES
+ 35/39 d7e250c63821  125.5s created=3 skipped=0 rejected=0 new=PROPERTY_DISPOSAL,URBAN_DEVELOPMENT_PROJECT,INVESTOR_PROPOSAL_EVALUATION
+ 36/39 dbed0870674c  142.6s created=3 skipped=0 rejected=0 new=POLICE_ORGANIZATION,POLICING_JURISDICTION,POLICE_GOVERNANCE
+ 37/39 dcb6f8cb059d  103.9s created=3 skipped=0 rejected=0 new=TAXATION_ISSUE,TAX_REFORM_IMPACT,CORPORATE_INHERITANCE_TAX

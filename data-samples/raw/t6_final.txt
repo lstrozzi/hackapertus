@@ -1,0 +1,15 @@
+docs300 newest: text=197/300 langs={'it': 20, 'fr': 39, 'de': 77, 'null': 164} cats={'?': 234, 'recording_video': 4, 'protocol_verbatim': 5, 'protocol_decision': 2, 'attachment': 9, 'agenda': 8, 'proposal': 2, 'response_text': 2, 'submitted_text': 3, 'government_resolution': 1, 'image': 1, 'opinionHasDraftRelatedDocument': 1, 'protocol': 1, 'document': 25, 'agenda_preview': 2}
+  affair 337366 -> http=200 data=0
+  affair 107913 -> http=200 data=0
+  affair 333763 -> http=200 data=0
+  affair 341396 -> http=200 data=0
+  affair 335155 -> http=200 data=0
+  affair 341358 -> http=200 data=0
+link-rate(newest300): 0/6
+api /texts/?limit=0    http=200 total=226062
+api /speeches/?limit=0 http=200 total=552264
+api /groups/?limit=0   http=200 total=8886
+  fedgaz-pdf -> 404 ctype=None len=0
+  publications-page -> 404 ctype=None len=0
+BusinessRole sample http=200 saved
+contributor expand keys: affair,affair_id,bodies,body_id,body_key,created_at,external_id,firstname,fullname,group,id,lastname,links,person_id,position,role_harmonized,type,updated_at,url_api

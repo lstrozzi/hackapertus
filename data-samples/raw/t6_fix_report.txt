@@ -1,0 +1,12 @@
+docs plain                               http=200 rows=3 total=909141 err= keys=affair_id,agenda_id,body_id,body_key,category,category_harmonized,date,external_alternative_id,external_id,format,hash,id,language,links,meeting_id,name,news_id,parent_type,size,text,tika_metadata,updated_at,updated_external_at,url,url_api,url_oparl
+docs fields4                             http=200 rows=3 total=909141 err= keys=affair_id,format,id,language
+docs with text                           http=422 rows=0 total=None err={"detail":[{"type":"bool_parsing","loc":["query","hide_null"],"msg":"Input should be a valid boolean, unable to interpret input","input":""}]}
+affairs fields3                          http=200 rows=3 total=326123 err= keys=id,title,type_harmonized
+affairs hide_null=true                   http=200 rows=3 total=326123 err= keys=begin_date,body_id,body_key,created_at,external_id,id,links,number,title,title_long,type_external_id,type_harmonized,type_harmonized_id,type_name,updated_at,url_api,url_external
+types census de                          http=200 rows=18 total=18 err= keys=body_keys,count,type_harmonized,type_harmonized_id,type_harmonized_wikidata_id
+docs group_by lang                       http=404 rows=0 total=None err={"detail":"Not Found"}
+agendas group_by lang                    http=404 rows=0 total=None err={"detail":"Not Found"}
+docs group_by category                   http=404 rows=0 total=None err={"detail":"Not Found"}
+docs group_by format                     http=404 rows=0 total=None err={"detail":"Not Found"}
+affairs expand cgroups                   http=200 rows=3 total=326123 err= keys=active,begin_date,bodies,body_id,body_key,created_at,end_date,external_alternative_id,external_id,id,links,number,state_external_id,state_name,state_name_harmonized,state_name_harmonized_id,title,title_long,type_external_id,type_harmonized,type_harmonized_id,type_harmonized_wikidata_id,type_name,updated_at,updated_external_at,url_api,url_external
+contributors expand group                http=200 rows=3 total=1398810 err= keys=affair_id,body_id,body_key,created_at,external_id,firstname,fullname,group,group_id,id,lastname,links,meeting_id,news_id,party,party_harmonized,party_wikidata_id,person_id,position,role,role_external_id,role_harmonized,session_id,type,updated_at,updated_external_at,url_api

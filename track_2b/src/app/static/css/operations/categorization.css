@@ -1,0 +1,21 @@
+.categorization .operation-field select { width: 100%; min-height: 38px; }
+.categorization .operation-empty { border-left: 3px solid #537d79; }
+
+/* Single-select document list, mirroring the ingestion list rows. */
+.categorization-document-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 220px; overflow-y: auto; }
+.categorization-document-list li { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border: 1px solid #ded8ce; border-radius: 6px; background: #fff; }
+.categorization-document-list input[type="checkbox"] { width: 16px; height: 16px; accent-color: #537d79; cursor: pointer; }
+.categorization-document-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: .9rem; }
+.categorization-document-status { font-size: .74rem; padding: 2px 8px; border-radius: 999px; background: #efece6; color: #4c463e; white-space: nowrap; }
+.categorization-document-status.status-ready { background: #e2f0e6; color: #2c6b41; }
+.categorization-document-status.status-needscategorization { background: #f7e7d2; color: #82501e; }
+.categorization-document-status.status-processing { background: #e3ecf7; color: #2d5486; }
+.categorization-document-status.status-failed { background: #f8e3e1; color: #a13a2f; }
+
+/* Result table shared by the proposal and assign boxes. */
+.category-result { border-left: 3px solid #537d79; background: #f4f7f6; padding: 10px 12px; display: grid; gap: 8px; }
+.category-result-title { margin: 0; font-size: .8rem; font-weight: 600; color: #3d5a57; }
+.category-result table { width: 100%; border-collapse: collapse; font-size: .88rem; }
+.category-result th, .category-result td { text-align: left; padding: 4px 8px; border-bottom: 1px solid #ded8ce; }
+.category-result details { font-size: .8rem; color: #6b645a; }
+.box-error { border-left: 3px solid #a13a2f; background: #f8e9e7; color: #7e2e25; padding: 10px 12px; font-size: .88rem; }
