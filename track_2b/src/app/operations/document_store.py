@@ -227,6 +227,7 @@ def read_document_states(names: list[str]) -> Dict[str, Any]:
                 "-[:OF_CATEGORY]->(:KeywordCategory)<-[:CONTAINS]-(:Ontology {id: $ontology_id}) "
                 "RETURN coalesce(document.FileName, document.name, document.label) AS name, "
                 "       document.Status AS status, "
+                "       document.Error AS error, "
                 "       document.ProposedCategories AS proposed, "
                 "       document.Text IS NOT NULL AS has_text, "
                 "       count(assigned) AS assigned",
@@ -261,6 +262,10 @@ def _parse_document_state(record: Dict[str, Any]) -> Dict[str, Any]:
 
     return {
         "status": str(record["status"] or "Unknown"),
+        # The reason behind a Failed status, stored by the ingester on the node. Without it
+        # a screen can only say "Failed", which cannot be told apart from an unreachable
+        # database or an unreadable file.
+        "error": str(record.get("error") or ""),
         "has_text": bool(record.get("has_text")),
         "assigned_count": int(record.get("assigned") or 0),
         "proposed": proposed,

@@ -112,7 +112,7 @@ def code_that_reads_configuration() -> str:
     """Everything able to consume an environment name: app code, compose, Makefile, scripts.
 
     A name does not have to be read by Python to be real. `NEO4J_URI` and the image overrides
-    are consumed by compose variable expansion, `PORT` by the Makefile, and refusing them
+    are consumed by compose variable expansion, and refusing them
     because they are not in `src/app` would report working configuration as a phantom.
     """
     sources: List[Path] = sorted((TRACK_ROOT / "src" / "app").rglob("*.py"))

@@ -1592,10 +1592,31 @@ async function refreshSampleDocuments(host) {
       metadata.textContent = formatDocumentSize(documentInfo.size_bytes);
       const status = document.createElement("td");
       const statusPill = document.createElement("span");
-      statusPill.className = "sample-document-status";
-      statusPill.textContent = documentInfo.platform_status || "n/a";
-      statusPill.title = "Document.status in the matched platform graph";
-      status.append(statusPill);
+      // The matched platform document's status is the authoritative one. When nothing
+      // matches, the platform answers `n/a` — under Plan SaaS without an instance token
+      // that is every sample row — so the column would report nothing at all while this
+      // app's own ingester has recorded a status and a reason for it. Fall back to the
+      // local status, exactly as the categorisation labels already do, and quote the
+      // stored reason: a scan with no text layer and an unreachable store otherwise look
+      // identical from here.
+      const platformStatus = documentInfo.platform_status || "n/a";
+      const ingestError = String(documentInfo.status_error || "");
+      const shownStatus = platformStatus === "n/a" ? (documentInfo.status || "unknown") : platformStatus;
+      statusPill.className = `sample-document-status sample-document-status--${shownStatus.toLowerCase()}`;
+      statusPill.textContent = shownStatus;
+      if (platformStatus === "n/a") {
+        statusPill.title = "This app's own ingestion status; no document with this filename exists in the platform graph";
+        status.append(statusPill);
+        if (ingestError) {
+          const reason = document.createElement("span");
+          reason.className = "sample-document-status-reason";
+          reason.textContent = ingestError;
+          status.append(reason);
+        }
+      } else {
+        statusPill.title = "Document.status in the matched platform graph";
+        status.append(statusPill);
+      }
       row.append(chooser, name, idCell, metadata, status);
       list.append(row);
     });

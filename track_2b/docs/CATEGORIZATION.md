@@ -48,7 +48,12 @@ matched platform document's status when there is one, the local ingestion status
 only for files with no platform match (e.g. `Failed`), so a freshly provided
 sample never reads `NotYetProcessed` just because this app has not ingested it.
 The Documents table's **Platform status** column reads the matched platform
-document's `status` property. Its summary counters are separate: they report this
+document's `status` property, and falls back to this app's own ingestion status when
+no platform document matches — the same rule the apply-box labels use, because under
+Plan SaaS without an instance token no sample matches at all, and a bare `n/a` would
+hide a `Failed` this app recorded along with its reason. That reason, written to
+`Document.Error` by the ingester, is delivered as `status_error` in the same payload
+and rendered beneath the status. Its summary counters are separate: they report this
 app's local ingestion progress, not the platform's workflow status.
 
 A document selected from that list is proposed **from whichever graph already has

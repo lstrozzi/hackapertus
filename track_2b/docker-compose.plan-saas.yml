@@ -15,14 +15,23 @@ services:
       # Without this the base literal (local) won and the app showed the local
       # platform's address while running the SaaS overlay.
       THALABUS_PLAN: saas
-      # The host's running platform (a Thalabus debug instance on :5210 here; for a
-      # remote deployment use its public URL, e.g. https://demo.thalabus.ai).
-      THALABUS_BASE_URL: http://host.docker.internal:5210
-      THALABUS_UI_URL: http://localhost:5210
-      # The host-published database — for this profile the base file's own `graph`
-      # container stays unused (it is not started when only these two files load; it
-      # would only join the stack via `up`, and nothing here points at it).
-      NEO4J_URI: bolt://host.docker.internal:7687
+      # The platform this app talks to. Plan SaaS means a remote instance, and the
+      # documented one is the public T2B instance — the same value the Makefile uses as
+      # its plan default, so the run banner and this file agree. (The laptop-profile
+      # literal was a debug instance on :5210, which does not exist on this machine.
+      # The host's :8080 is an unrelated Thalabus deployment, deliberately not used here.)
+      THALABUS_BASE_URL: https://demo.thalabus.ai
+      THALABUS_UI_URL: https://demo.thalabus.ai
+      # The app's own graph store, the `graph` service of this stack. (It is started by
+      # `make run` on both plans — an earlier note here said otherwise and was wrong;
+      # verified live: the service comes up healthy under this overlay too.) Published
+      # nowhere, so nothing outside this stack can reach it and nothing here writes to
+      # a database belonging to some other deployment.
+      NEO4J_URI: bolt://graph:7687
+      # Published GUI port for this plan: :8080 is the main platform on this machine
+      # and :8081 the local litellm gateway, so the test instance takes :8082. The
+      # Makefile reads the same literal below; change it in both places, together.
+      PORT: "8082"
       # Secrets (.env). The retrieval keys default to the chat key because one provider
       # token covers all three routes once the endpoint enables them.
       LLM_API_KEY: ${LLM_API_KEY:-}

@@ -16,10 +16,17 @@
 #   make run | run-local | run-saas | run-a | run-b (legacy aliases) | build | stop | logs | health | keys | lint
 #
 # Configuration precedence: `make run VAR=…` > process env > .env > plan default.
+# The GUI port is the one exception: it is a literal in the compose files, so no
+# command-line variable, environment variable, or .env line can move it.
 
 .PHONY: run run-local run-saas run-a run-b build stop logs health preflight keys lint verify
 
-PORT ?= 8000
+# The GUI port is a literal in the compose files (base 8082, overridden per plan in
+# the plan overlay), not a Makefile setting — it is the one value `make run VAR=…`
+# therefore cannot override. The two numbers below mirror those literals for the
+# banner and `make health` only; compose never reads them.
+APP_GUI_PORT := 8082
+PORT := $(APP_GUI_PORT)
 THALABUS_PORT ?= 8080
 COMPOSE ?= docker compose
 PLAN ?= local
@@ -44,7 +51,12 @@ else
 $(error Unknown PLAN '$(PLAN)' — use PLAN=local or PLAN=SaaS)
 endif
 
-export PORT THALABUS_PORT EMBEDDINGS_URL RERANKER_URL
+# PORT and NEO4J_PASSWORD are deliberately NOT exported. A plain `export` publishes
+# even an unset or mirrored name into compose's process environment, where it outranks
+# .env: exporting an empty NEO4J_PASSWORD made the app fall back to the compose default
+# password and the graph store answered `unauthorized` (observed live). A file that
+# declares a setting should not be silently outranked by an unset process variable.
+export THALABUS_PORT EMBEDDINGS_URL RERANKER_URL
 export SAAS_EMBEDDINGS_URL SAAS_EMBEDDINGS_MODEL SAAS_RERANKER_URL SAAS_RERANKER_MODEL
 export THALABUS_PLAN ?= $(THALABUS_PLAN_DEFAULT)
 export THALABUS_BASE_URL ?= $(THALABUS_BASE_URL_DEFAULT)
@@ -57,7 +69,7 @@ run: preflight
 	$(COMPOSE) $(COMPOSE_FILES) up --build -d
 	@echo ""
 	@echo "$(PLAN_NOTE)"
-	@echo "GUI:      http://localhost:$(PORT)"
+	@echo "GUI:      http://localhost:$(APP_GUI_PORT)   (compose publishes it; the Makefile holds no port default)"
 	@echo "Platform: $(THALABUS_BASE_URL)    (browser: $(THALABUS_UI_URL))"
 	@echo "Check:    make health   — then press 'Test model — Hello World' in the GUI"
 
@@ -98,9 +110,19 @@ stop:
 logs:
 	$(COMPOSE) $(COMPOSE_FILES) logs -f app
 
+# The published GUI port is read from `compose config`, so the plan overlay decides it
+# and this file mirrors nothing — no second copy to fall out of step. Two Makefile traps
+# shaped this line, both of which fail silently: a comma inside $(shell …) is read as a
+# separator of the enclosing call, and a literal double quote closes the recipe's own
+# quoting (observed: the file argument arrived truncated to "-f"). Hence no double quotes
+# and no commas anywhere below, and `sed -n /…/-1p` in place of `| head -1`.
+GUI_PORT = $(shell $(COMPOSE) $(COMPOSE_FILES) config 2>/dev/null | sed -n -e '/target: 8000/{$!{n;p}}' | sed -n -e '/published/{s/[^0-9]//g;p;q}' 2>/dev/null)
+
 health:
-	@curl -fsS http://localhost:$(PORT)/api/health; echo ""
-	@curl -fsS http://localhost:$(PORT)/api/platform/status; echo ""
+	@test -n "$(GUI_PORT)" || { echo 'ERROR: could not read the published port — is docker running? pass the same PLAN as make run'; exit 1; }
+	@echo '# published GUI port: $(GUI_PORT)  (resolved by compose for PLAN=$(PLAN))'
+	@curl -fsS http://localhost:$(GUI_PORT)/api/health; echo ""
+	@curl -fsS http://localhost:$(GUI_PORT)/api/platform/status; echo ""
 
 # Plan Local mounts a platform JWT key pair; generate it locally, never commit it.
 keys:

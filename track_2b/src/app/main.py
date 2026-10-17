@@ -529,6 +529,9 @@ def tracked_sample_documents() -> list[dict[str, Any]]:
     for document in documents:
         state: Dict[str, Any] = states.get(document["name"]) or {}
         document["status"] = statuses.get(document["name"], str(state.get("status") or "Unknown"))
+        # Why a status reads Failed, read off the node. A table that can only print "Failed"
+        # makes an unreadable file indistinguishable from a broken deployment.
+        document["status_error"] = str(state.get("error") or "")
         document["assigned_categories"] = int(state.get("assigned_count") or 0)
         document["proposed_categories"] = list(state.get("proposed") or [])
 

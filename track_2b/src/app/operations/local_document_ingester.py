@@ -130,7 +130,7 @@ class LocalDocumentIngester:
             self._set_state(percent=90)
 
         if not content.strip():
-            raise ValueError(f"No text could be extracted from {name}.")
+            raise ValueError(f"This PDF format is not supported. No text could be extracted from {name}.")
 
         return content
 

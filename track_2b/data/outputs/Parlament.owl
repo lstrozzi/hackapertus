@@ -1,0 +1,880 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rdf:RDF
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+   xmlns:thalabus="https://thalabus.io/ontology/"
+>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_7de9a6a414e0">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_7de9a6a414e0</thalabus:entityId>
+    <rdfs:label>SOCIAL_WELFARE_INSTRUMENT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Category for documents proposing or discussing specific social welfare instruments, such as supplementary benefits, subsidies, or financial support programs designed to alleviate poverty or support vulnerable groups.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_0c688bd1c1ce">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_0c688bd1c1ce</thalabus:entityId>
+    <rdfs:label>URBAN_DEVELOPMENT_PROJECT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents related to urban planning initiatives, including residential construction, densification strategies, zoning changes, and integration with municipal development plans.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/EntityOntology/Parlament/Topic">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Topic</rdfs:label>
+    <thalabus:nodeType>EntityOntology</thalabus:nodeType>
+    <thalabus:entityId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:entityId>
+    <thalabus:typeLabel>Topic</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A subject topic from the solution-owned topic scheme (T10 hybrid, Tier 2). Seeded from the measured draft F5: 32 seeds over one broader level, 52.8 % floor coverage of all affairs (streamed over 326,123 affairs); expansion toward 40-60 only where F5 shows mass. EuroVoc alignment is URI-only (exact label matching is unreliable, T10 F4); RM labels come from the translation fallback. Open C-1: topics may be carried as document categories instead of entities; this entity form is the graph-side option.</rdfs:comment>
+    <thalabus:colorForeground>#FFFFFF</thalabus:colorForeground>
+    <thalabus:colorBackground>#7B271C</thalabus:colorBackground>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/topic_uri"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/gnd_uri"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/label_ml"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/eurovoc_uri"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/scheme"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/IS_DOCUMENTED">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>IS_DOCUMENTED</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>e00d37ac-8a97-44ba-aa92-80354b8c8542</thalabus:entityId>
+    <thalabus:typeLabel>IS_DOCUMENTED</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Links an entity to the Document that describes or registers it. For Affair the cardinality is one affair to zero-or-more documents (1:N when documented): one source affair keyed by business_id may be documented by several files, so do not create one Affair per file. Machine-managed edge properties (kind, created_by, created_at, stable key) are defined by T27, not by this ontology; this ontology only declares the type, and T27 owns registration, the writer, GC and ACL rules. Traversal is ACL-guarded per T27 ground rule 1.</rdfs:comment>
+    <thalabus:sourceLabels>Affair</thalabus:sourceLabels>
+    <thalabus:targetLabels>Document</thalabus:targetLabels>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_08e11371a59c">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_08e11371a59c</thalabus:entityId>
+    <rdfs:label>DECISION_BODY</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific governmental body or council that issued the decision or is reviewing the matter</rdfs:comment>
+    <thalabus:lov>CANTONAL_COUNCIL,EXECUTIVE_COUNCIL,GOVERNMENT_COUNCIL,SPECIAL_COMMISSION</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/EntityOntology/Parlament/Affair">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Affair</rdfs:label>
+    <thalabus:nodeType>EntityOntology</thalabus:nodeType>
+    <thalabus:entityId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:entityId>
+    <thalabus:typeLabel>Affair</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A single parliamentary affair (motion, postulate, interpellation, government business, ...) as published by the Swiss Federal Assembly and mirrored in the OpenParlData corpus (affairs table, 326k rows). Identified business-wise by business_id. The instrument/kind of an affair is deliberately NOT an attribute: it is expressed via the AFFAIR_TYPE document category (T13 D3).</rdfs:comment>
+    <thalabus:colorForeground>#FFFFFF</thalabus:colorForeground>
+    <thalabus:colorBackground>#A49F34</thalabus:colorBackground>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/scope"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/submitted_on"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/type_wikidata"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/closed_on"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/source_url"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/extraction_notes"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/business_id"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/state"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/title_ml"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/full_name">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>77c61f41-3b37-4644-9882-4bfbc3d84f8b</thalabus:parentId>
+    <thalabus:parentLabel>Person</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>full_name</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Name of the person as published in the corpus.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/closed_on">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>closed_on</thalabus:attrName>
+    <thalabus:attrType>date</thalabus:attrType>
+    <thalabus:attrValue>Date on which the affair was closed or terminated.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_89602d90fbf9">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_89602d90fbf9</thalabus:entityId>
+    <rdfs:label>TAX_REFORM_IMPACT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents analyzing or commenting on how proposed or enacted tax reforms affect specific sectors, businesses, or individuals.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/EntityOntology/Parlament/Canton">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Canton</rdfs:label>
+    <thalabus:nodeType>EntityOntology</thalabus:nodeType>
+    <thalabus:entityId>9df7a738-4841-442c-8ba6-0e7ba5eda81c</thalabus:entityId>
+    <thalabus:typeLabel>Canton</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A Swiss canton: the 26 member states, directly grounded in OpenParlData bodies rows with type=canton (measured: 2,411 bodies total; type distribution country 249 / canton 26 / city 162 / municipality 1974). A canton is a territory, not a parliament: its legislative body is referenced by body_id and modelled as an Organisation. Persons attach via FROM_CANTON; affairs carry their corpus slice through SCOPE categorisation, not an edge to this type.</rdfs:comment>
+    <thalabus:colorForeground>#FFFFFF</thalabus:colorForeground>
+    <thalabus:colorBackground>#3A0C6C</thalabus:colorBackground>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/canton_code"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/body_id"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/wikidata_uri"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/name_ml"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/submitted_on">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>submitted_on</thalabus:attrName>
+    <thalabus:attrType>date</thalabus:attrType>
+    <thalabus:attrValue>Date on which the affair was submitted.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/org_kind">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>1133b3a5-c3a8-4b44-b33e-48e05fcb0ae1</thalabus:parentId>
+    <thalabus:parentLabel>Organisation</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>org_kind</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Kind of organisation. Allowed values: body, committee, department, party, group.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_7ac824d5d1bd">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_7ac824d5d1bd</thalabus:entityId>
+    <rdfs:label>INCLUSIVE_EDUCATION</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that focus on policies, practices, or discussions related to integrating students with diverse learning needs into mainstream educational settings.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/topic_uri">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:parentId>
+    <thalabus:parentLabel>Topic</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>topic_uri</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Solution-owned topic URI: stable identifier minted by the T10 derived scheme (hybrid: derived seeds plus EuroVoc URIs only where an aligned concept exists; scheme=derived).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/ABOUT_TOPIC">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>ABOUT_TOPIC</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>06198916-519a-4150-b787-d9ec8e6628d9</thalabus:entityId>
+    <thalabus:typeLabel>ABOUT_TOPIC</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>An affair is about this subject topic (T13 D2, T10 derived scheme; classifier output, Tier 1 edge pointing at the Tier-2 Topic entity). The weight carries the classifier confidence rather than a binary judgement, so downstream filtering can threshold. Under the category-first option (C-1) this same signal rides the TOPIC document category instead and costs no edge type.</rdfs:comment>
+    <thalabus:sourceLabels>Affair</thalabus:sourceLabels>
+    <thalabus:targetLabels>Topic</thalabus:targetLabels>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/ABOUT_TOPIC/weight"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/extraction_notes">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>extraction_notes</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Free-text classifier rationale recorded during ingestion/harmonization.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_a0df8d2966c0">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_a0df8d2966c0</thalabus:entityId>
+    <rdfs:label>TEACHER_TRAINING</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that address the preparation, curriculum, or professional development of teachers, particularly concerning new educational challenges or methodologies.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_6b87a33128b5">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_6b87a33128b5</thalabus:entityId>
+    <rdfs:label>LEGISLATIVE_INQUIRY</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that contain formal questions or inquiries directed to a legislative or executive body regarding specific policy issues or administrative matters.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/EntityOntology/Parlament/Organisation">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Organisation</rdfs:label>
+    <thalabus:nodeType>EntityOntology</thalabus:nodeType>
+    <thalabus:entityId>1133b3a5-c3a8-4b44-b33e-48e05fcb0ae1</thalabus:entityId>
+    <thalabus:typeLabel>Organisation</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A collective actor in the parliamentary corpus: parliamentary body, committee, department, party, or vote group. Sourced from the bodies table (2,411 rows), contributor roles (committees/departments), and vote group_* fields. Affairs link to organisations via HANDLED_BY and PUBLISHED_BY; persons via MEMBER_OF.</rdfs:comment>
+    <thalabus:colorForeground>#FFFFFF</thalabus:colorForeground>
+    <thalabus:colorBackground>#54A9B1</thalabus:colorBackground>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/level"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/official_key"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/name_ml"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/org_kind"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_a9108c33e43d">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_a9108c33e43d</thalabus:entityId>
+    <rdfs:label>INVESTOR_PROPOSAL_EVALUATION</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that analyze and compare bids from private investors for the purchase of public land, including financial offers, development plans, and compliance with public policy criteria.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_99557940aa15">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_99557940aa15</thalabus:entityId>
+    <rdfs:label>POLICE_ORGANIZATION</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Category for documents detailing the structure, composition, leadership, and operational organization of a police force, including commission formation, staffing, and station locations.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/ABOUT_TOPIC/weight">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>06198916-519a-4150-b787-d9ec8e6628d9</thalabus:parentId>
+    <thalabus:parentLabel>ABOUT_TOPIC</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>weight</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Classifier confidence for this affair-topic pair as a decimal string in 0..1 (stored as string so a future float type can be introduced without changing semantics). Allows a minimum-confidence filter at read time.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/MEMBER_OF/since">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>0a608316-7bf4-4a1c-ac90-f02abb201fdb</thalabus:parentId>
+    <thalabus:parentLabel>MEMBER_OF</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>since</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Optional. Year or date since which the person is a member of the organisation.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_6dd76090952d">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_6dd76090952d</thalabus:entityId>
+    <rdfs:label>CORPORATE_INHERITANCE_TAX</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents specifically addressing tax treatment of business succession, transfer of ownership, and related financial consequences for the seller and buyer.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_efb9308d3fea">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_efb9308d3fea</thalabus:entityId>
+    <rdfs:label>SUBJECT_MATTER</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The main topic or issue addressed in the document (e.g., transparency, taxation, corporate governance)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_3c407f324ef9">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_3c407f324ef9</thalabus:entityId>
+    <rdfs:label>VOCATIONAL_TRAINING_SUPPORT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents proposing or discussing financial, fiscal, or regulatory support for companies offering apprenticeships</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/PUBLISHED_BY">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>PUBLISHED_BY</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>955e3bb0-9361-4d09-96a8-21d97322e738</thalabus:entityId>
+    <thalabus:typeLabel>PUBLISHED_BY</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The affair was published/issued by this organisation (source role_harmonized=publisher, or the leading department).</rdfs:comment>
+    <thalabus:sourceLabels>Affair</thalabus:sourceLabels>
+    <thalabus:targetLabels>Organisation</thalabus:targetLabels>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/source_url">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>source_url</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Canonical OpenParlData URI of the affair record. Provenance link back to the source.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/CONTRIBUTES_TO/role_kind">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>001c5720-b528-4fb6-a7ec-a1e7a02a9a6f</thalabus:parentId>
+    <thalabus:parentLabel>CONTRIBUTES_TO</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>role_kind</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Role of the person towards the affair. Allowed values: author, cosign, speaker, assignee (aligned with source role_harmonized).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_4773e2b2b99c">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_4773e2b2b99c</thalabus:entityId>
+    <rdfs:label>LANGUAGE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Language of the document/affair title, derived — the corpus carries no trustworthy row-level language field (T8: no original_language; docs.language is copied metadata, not detected). LoV normalised to UPPER_SNAKE of the ISO codes de/fr/it/rm. Measured title fill on affairs: de 74.9 %, fr 44.5 %, it 30.3 %, rm 0.38 % (languages sum &gt; 100 % because titles are multi-translated).</rdfs:comment>
+    <thalabus:lov>DE,FR,IT,RM</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/official_key">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>1133b3a5-c3a8-4b44-b33e-48e05fcb0ae1</thalabus:parentId>
+    <thalabus:parentLabel>Organisation</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>official_key</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Corpus body or party key. Stable re-link key.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/eurovoc_uri">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:parentId>
+    <thalabus:parentLabel>Topic</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>eurovoc_uri</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Optional alignment URI to a EuroVoc concept. Kept separate from topic_uri so alignment stays revisable; exact prefLabel matching is not reliable (T10 F4).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/party">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>77c61f41-3b37-4644-9882-4bfbc3d84f8b</thalabus:parentId>
+    <thalabus:parentLabel>Person</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>party</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Harmonized party acronym (source party_harmonized; 61.5% fill on contributors, 89.6% on votes). Soft link to Organisation nodes of kind party.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_6958f5cbe3fc">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_6958f5cbe3fc</thalabus:entityId>
+    <rdfs:label>POLICY_DOMAIN</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific policy area or subject matter addressed by the legislative decision</rdfs:comment>
+    <thalabus:lov>EDUCATION,ENVIRONMENT,FINANCE,HEALTH,HERITAGE_PROTECTION,INFRASTRUCTURE</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_4aaaf74769f3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_4aaaf74769f3</thalabus:entityId>
+    <rdfs:label>DOCUMENT_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The primary classification of the document (e.g., petition, inquiry, report, resolution)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_6efb11bf7b9b">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_6efb11bf7b9b</thalabus:entityId>
+    <rdfs:label>SESSION_DATE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The date when the legislative session took place</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/level">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>1133b3a5-c3a8-4b44-b33e-48e05fcb0ae1</thalabus:parentId>
+    <thalabus:parentLabel>Organisation</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>level</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Geographic/administrative level. Allowed values mirror the measured bodies.type distribution: country (249), canton (26), city (162), municipality (1974).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/wikidata_uri">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>9df7a738-4841-442c-8ba6-0e7ba5eda81c</thalabus:parentId>
+    <thalabus:parentLabel>Canton</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>wikidata_uri</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Alignment URI to the canton article (bodies.wikidata_id / legislative_wikidata_id); alignment hook consistent with Affair.type_wikidata.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_b4f543bc2dc8">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_b4f543bc2dc8</thalabus:entityId>
+    <rdfs:label>DATA_AVAILABILITY_STATUS</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Describes the availability and reliability of data referenced in the document, including whether data is complete, outdated, or missing</rdfs:comment>
+    <thalabus:lov>complete,partial,outdated,missing</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_8ad4f6a378e1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_8ad4f6a378e1</thalabus:entityId>
+    <rdfs:label>QUESTION_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The nature of the inquiry or request (e.g., factual question, policy question, request for action)</rdfs:comment>
+    <thalabus:lov>factual,policy,action_request</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_d1934029aa68">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_d1934029aa68</thalabus:entityId>
+    <rdfs:label>GOVERNANCE_LEVEL</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Identifies the administrative or governmental level responsible for the subject matter (e.g., federal, cantonal, municipal)</rdfs:comment>
+    <thalabus:lov>federal,cantonal,municipal,regional</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_28d2db4c7134">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_28d2db4c7134</thalabus:entityId>
+    <rdfs:label>PROPERTY_DISPOSAL</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Category for documents proposing the sale or disposal of government-owned real estate assets, including justification based on strategic asset management, budget relief, or urban development goals.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_20672ad45843">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_20672ad45843</thalabus:entityId>
+    <rdfs:label>ADDRESSEE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The intended recipient of the document, such as a government body, official, or committee.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/HANDLED_BY">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>HANDLED_BY</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>c868d585-9e62-4b8f-b9a2-22acff6516c0</thalabus:entityId>
+    <thalabus:typeLabel>HANDLED_BY</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Committee/department routing of an affair: which organisation handles (or handled) the affair at a given stage.</rdfs:comment>
+    <thalabus:sourceLabels>Affair</thalabus:sourceLabels>
+    <thalabus:targetLabels>Organisation</thalabus:targetLabels>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/HANDLED_BY/stage_kind"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_60992c2cf1f7">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_60992c2cf1f7</thalabus:entityId>
+    <rdfs:label>REQUEST_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The nature or type of the request made in the document (e.g., inquiry, question, petition)</rdfs:comment>
+    <thalabus:lov>INQUIRY,QUESTION,PETITION</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_463740a1db42">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_463740a1db42</thalabus:entityId>
+    <rdfs:label>STATISTICAL_DATA_PRESENT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Indicates whether the document contains statistical data, tables, or numerical information related to the inquiry topic.</rdfs:comment>
+    <thalabus:lov>TRUE, FALSE</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_bd9d035f0402">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_bd9d035f0402</thalabus:entityId>
+    <rdfs:label>AFFAIR_STATE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Lifecycle state of the affair, derived from OpenParlData events.title_harmonized (full stream 2026-10-13: 84 raw harmonized titles, 328 nonempty; affairs.state and affairs.state_name_harmonized are dead). LoV is the curated 14-value canonical normalisation of the measured enum; the import file maps every raw title onto one of these (e.g. Beantwortung -&gt; BEANTWORTET, Bereit zur Traktandierung -&gt; TRAKTANDIERT, Uberwiesen/Weisung/Zuweisung an Kommission -&gt; UEBERWIESEN, Im/Vom Parlament behandelt -&gt; BEHANDELT, Abgeschlossen -&gt; ERLEDIGT). The 14 canonical values cover ~70 % of event rows; the long-tail request/deadline vocabulary stays unmapped. Note: the former T13 seed value in Treatment does not occur in the archived corpus and was withdrawn.</rdfs:comment>
+    <thalabus:lov>EINGEREICHT,BEANTWORTET,TRAKTANDIERT,UEBERWIESEN,BEHANDELT,ANGENOMMEN,ABGELEHNT,ABGESCHRIEBEN,ZURUECKGEZOGEN,ERLEDIGT,NICHT_ERHEBLICH,ANTRAG_ANNEHMEN,ANTRAG_ABLEHNEN,ANTRAG_UEBERWEISEN</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/state">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>state</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Lifecycle state, harmonized from events.title_harmonized (91% coverage; state/active are dead fields). Allowed values: see AFFAIR_STATE category LoV (T13 D3).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/name_ml">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>9df7a738-4841-442c-8ba6-0e7ba5eda81c</thalabus:parentId>
+    <thalabus:parentLabel>Canton</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>name_ml</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>JSON object of per-language names from bodies.name_de/_fr/_it (EN also available on bodies.name_en), e.g. {"de": "Bern", "fr": "Berne", "it": "Berna"}.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_ab6bf0a92db9">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_ab6bf0a92db9</thalabus:entityId>
+    <rdfs:label>ENERGY_FUNDING</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Focuses on financial aspects related to energy programs, subsidies, budget allocation, and funding mechanisms</rdfs:comment>
+    <thalabus:lov>SUBSIDIES,BUDGET,FUNDING,GRANTS</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_51716f5a32c6">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_51716f5a32c6</thalabus:entityId>
+    <rdfs:label>LEGISLATIVE_STAGE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The current stage of the legislative process for the discussed bill or proposal</rdfs:comment>
+    <thalabus:lov>APPROVED,FIRST_READING,REJECTED,REPORT_SUBMITTED,SECOND_READING,THIRD_READING,UNDER_REVIEW</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Organisation/name_ml">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>1133b3a5-c3a8-4b44-b33e-48e05fcb0ae1</thalabus:parentId>
+    <thalabus:parentLabel>Organisation</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>name_ml</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>JSON object of per-language names, e.g. {"de": "...", "fr": "...", "it": "..."}.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_f00f10f82af5">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_f00f10f82af5</thalabus:entityId>
+    <rdfs:label>FAMILY_SUPPORT_MEASURES</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents specifically addressing policies or proposals related to financial or social support for families, including child poverty alleviation, working poor support, and family income supplements.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/EntityOntology/Parlament/Person">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Class"/>
+    <rdfs:label>Person</rdfs:label>
+    <thalabus:nodeType>EntityOntology</thalabus:nodeType>
+    <thalabus:entityId>77c61f41-3b37-4644-9882-4bfbc3d84f8b</thalabus:entityId>
+    <thalabus:typeLabel>Person</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A natural person in the parliamentary corpus: a contributor (author, cosigner, speaker or assignee, 67% of contributor rows are person-typed, 85.3% affair coverage) and/or a voter (per-person votes). Persons connect to affairs via CONTRIBUTES_TO, to organisations via MEMBER_OF, and to their canton via FROM_CANTON (replacing the former canton attribute, which had no backing on the persons table).</rdfs:comment>
+    <thalabus:colorForeground>#FFFFFF</thalabus:colorForeground>
+    <thalabus:colorBackground>#C95637</thalabus:colorBackground>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/party"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/person_key"/>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/full_name"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_1f4596679d77">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_1f4596679d77</thalabus:entityId>
+    <rdfs:label>POLICE_GOVERNANCE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Category for documents describing the governance framework of the police, including oversight bodies (e.g., police commissions), decision-making processes, and reporting lines to executive or legislative bodies.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_f9f687f39fdf">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_f9f687f39fdf</thalabus:entityId>
+    <rdfs:label>EDUCATION_POLICY</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents related to policies, support, or regulation of education and vocational training</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_5479d3b62be0">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_5479d3b62be0</thalabus:entityId>
+    <rdfs:label>AFFAIR_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Parliamentary instrument of the affair, mirroring OpenParlData type_harmonized (measured on the full affairs stream 2026-10-13: 17 values, filled on 83.1 %, top-heavy Anfrage/Interpellation/Regierungsgeschäft/Motion/Postulat ~62 % of filled). LoV values are the harmonized German labels normalised to UPPER_SNAKE (umlauts expanded: REGIERUNGSGESCHAFT, EINBUERGERUNG, ERGAENZUNGSANTRAG); the import file maps raw values onto them. Wikidata bridge on 68.2 % (type_wikidata) is kept as an affair attribute, not here. use_as_document_label candidate (C-4, pending T12).</rdfs:comment>
+    <thalabus:lov>ANFRAGE,INTERPELLATION,REGIERUNGSGESCHAFT,MOTION,POSTULAT,FRAGESTUNDE,WAHL,PARLAMENTARISCHE_INITIATIVE,BERICHT,VERNEHMLASSUNG,INFORMATIONSDOKUMENT,PETITION,VOLKSINITIATIVE,DIVERSES,PARLAMENTARISCHER_GENEHMIGUNGSBESCHLUSS,EINBUERGERUNG,ERGAENZUNGSANTRAG</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/title_ml">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>title_ml</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>JSON object of per-language titles, e.g. {"de": "...", "fr": "...", "it": "..."}. title_lang identifies the selected language; filename suffixes are not reliable language evidence (T8).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_954a625f27f0">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_954a625f27f0</thalabus:entityId>
+    <rdfs:label>LEGISLATIVE_ISSUE_STATUS</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The procedural status or stage of a legislative proposal or report within the session (e.g., reported ready for debate, first reading completed)</rdfs:comment>
+    <thalabus:lov>ready_for_debate,first_reading_completed,discussion_started,adopted,rejected,postponed</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/MEMBER_OF">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>MEMBER_OF</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>0a608316-7bf4-4a1c-ac90-f02abb201fdb</thalabus:entityId>
+    <thalabus:typeLabel>MEMBER_OF</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Membership of a person in an organisation (party affiliation, committee seat). The classic cross-affair bridge: persons are connected through the organisations they share.</rdfs:comment>
+    <thalabus:sourceLabels>Person</thalabus:sourceLabels>
+    <thalabus:targetLabels>Organisation</thalabus:targetLabels>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/MEMBER_OF/since"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_c68aebf967a5">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_c68aebf967a5</thalabus:entityId>
+    <rdfs:label>SCOPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Parliament corpus slice of the document: generic level (federal/canton/city, normalised from bodies.type) or the concrete parliament body key used by the demo dossiers — CHE (federal assembly), 1711 (Bern city), 2939 (Thun). Extend with concrete ids (SH, GR, ...) as more feeds land; second-choice use_as_document_label candidate (C-4, pending T12).</rdfs:comment>
+    <thalabus:lov>FEDERAL,CANTON,CITY,CHE,1711,2939</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_798a3064f86e">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_798a3064f86e</thalabus:entityId>
+    <rdfs:label>LEGISLATIVE_BODY</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific legislative or governing body that convened and made decisions</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/FROM_CANTON">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>FROM_CANTON</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>7e3cc446-e0d5-4689-aaaf-6dac3fb556aa</thalabus:entityId>
+    <thalabus:typeLabel>FROM_CANTON</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The canton a person comes from / represents (origin or constituency). Replaces the former Person.canton attribute: persons has NO canton column (measured on the persons stream: the field does not exist), so this edge is an ingestion DERIVATION — resolve the person body via persons.body_id and read bodies.canton_key, or match persons.electoral_district_*. Ingesting the persons table verbatim cannot populate it; the writer must resolve it.</rdfs:comment>
+    <thalabus:sourceLabels>Person</thalabus:sourceLabels>
+    <thalabus:targetLabels>Canton</thalabus:targetLabels>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_b749ef6fd123">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_b749ef6fd123</thalabus:entityId>
+    <rdfs:label>INQUIRY_ISSUE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific issue or question being raised in the document, e.g., infrastructure planning, energy capacity, or cost analysis.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_a3e9324d69ba">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_a3e9324d69ba</thalabus:entityId>
+    <rdfs:label>ANSWER_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Categorizes the document based on the nature of the response (e.g., official government answer to a parliamentary inquiry, policy statement, factual report).</rdfs:comment>
+    <thalabus:lov>OFFICIAL_GOVERNMENT_RESPONSE, POLICY_STATEMENT, FACTUAL_REPORT</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/canton_code">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>9df7a738-4841-442c-8ba6-0e7ba5eda81c</thalabus:parentId>
+    <thalabus:parentLabel>Canton</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>canton_code</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Two-letter canton key (bodies.canton_key), e.g. BE, SH, GR. Canonical join key; persons and votes reference cantons by the same two-letter codes.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_bdf63e479a69">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_bdf63e479a69</thalabus:entityId>
+    <rdfs:label>RESPONSE_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Indicates whether the document is a response to a specific inquiry, petition, or legislative request</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_a3a86b885e15">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_a3a86b885e15</thalabus:entityId>
+    <rdfs:label>POLICY_PROPOSAL</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that contain a formal proposal for a new policy, legislative change, or administrative measure to be considered by a governing body.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_230aa731b35f">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_230aa731b35f</thalabus:entityId>
+    <rdfs:label>POLICING_JURISDICTION</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Category for documents outlining the division of responsibilities between cantonal and municipal police authorities, including specific task allocation and cooperation protocols.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_e45fbbc69d78">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_e45fbbc69d78</thalabus:entityId>
+    <rdfs:label>SOLAR_ENERGY_POTENTIAL</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents discussing solar energy capacity, production targets, potential output, and related projections</rdfs:comment>
+    <thalabus:lov>CAPACITY,PRODUCTION,TARGETS,PROJECTIONS</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/gnd_uri">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:parentId>
+    <thalabus:parentLabel>Topic</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>gnd_uri</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Optional alignment URI to a GND (German National Library) subject heading.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_583db8f67c1e">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_583db8f67c1e</thalabus:entityId>
+    <rdfs:label>CONSULTATION_STATUS</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The stage or status of the consultation process (e.g., draft proposal, open consultation, feedback received)</rdfs:comment>
+    <thalabus:lov>draft_proposal,open_consultation,feedback_received,closed</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/HANDLED_BY/stage_kind">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>c868d585-9e62-4b8f-b9a2-22acff6516c0</thalabus:parentId>
+    <thalabus:parentLabel>HANDLED_BY</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>stage_kind</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Which handling stage this edge represents. Allowed values: assigned_committee, leading_department.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_83eaeebcff87">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_83eaeebcff87</thalabus:entityId>
+    <rdfs:label>COMPARATIVE_METRIC</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Indicates whether the document requests data or analysis to be compared against another entity (e.g., national average, other cantons)</rdfs:comment>
+    <thalabus:lov>NATIONAL_AVERAGE,OTHER_CANTONS,INTERNATIONAL_COMPARISON</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/scope">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>scope</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Parliament ID. Join key to Organisation.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_b8a2952639b8">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_b8a2952639b8</thalabus:entityId>
+    <rdfs:label>LEGISLATIVE_PROPOSAL_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The type of legislative proposal (e.g., postulate, motion, interpellation)</rdfs:comment>
+    <thalabus:lov>postulate,motion,interpellation,initiative</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_fc5ee01d9b69">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_fc5ee01d9b69</thalabus:entityId>
+    <rdfs:label>INQUIRY_SUBJECT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Identifies the primary subject matter of the inquiry or question addressed in the document (e.g., counterfeit documents, identity verification, security measures).</rdfs:comment>
+    <thalabus:lov>COUNTERFEIT_DOCUMENTS, IDENTITY_VERIFICATION, SECURITY_MEASURES, TRAVEL_DOCUMENTS</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_c15214a88ea1">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_c15214a88ea1</thalabus:entityId>
+    <rdfs:label>INQUIRY_TYPE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The nature or format of the inquiry submitted to the government body (e.g., written question, oral question, motion, resolution)</rdfs:comment>
+    <thalabus:lov>WRITTEN_QUESTION,ORAL_QUESTION,MOTION,RESOLUTION</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_64fce25a14b3">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_64fce25a14b3</thalabus:entityId>
+    <rdfs:label>EDUCATION_POLICY_DOCUMENT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents that propose, discuss, or analyze educational policies, reforms, or pedagogical approaches within a specific jurisdiction.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/scheme">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:parentId>
+    <thalabus:parentLabel>Topic</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>scheme</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Which topical layer this node came from. Allowed values: derived (our seed scheme), eurovoc (EuroVoc concept), hybrid (derived scheme with a EuroVoc alignment on some seeds).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/Ontology/Parlament">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#Ontology"/>
+    <thalabus:nodeType>Ontology</thalabus:nodeType>
+    <rdfs:label>Open Parlament Data</rdfs:label>
+    <rdfs:comment>Ontology for the OpenParlData parliamentary affairs hackathon use case. Entity types, relationships, and document categories are to be defined.</rdfs:comment>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:isDefault rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</thalabus:isDefault>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/business_id">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>business_id</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Official parliamentary business number. Stable re-link key across imports and updates (T11).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Affair/type_wikidata">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>3aeb81a6-e243-420a-a936-cf5de4c6da5c</thalabus:parentId>
+    <thalabus:parentLabel>Affair</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>type_wikidata</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Wikidata Q-id of the affair instrument, from source type_harmonized_wikidata (68.2% bridged). Alignment hook only; the human-readable instrument lives in the AFFAIR_TYPE category.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_86c2f0c8aed6">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_86c2f0c8aed6</thalabus:entityId>
+    <rdfs:label>STAKEHOLDER_GROUP</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific group or entity the document is addressed to or involves (e.g., municipalities, political parties, commissions)</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Person/person_key">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>77c61f41-3b37-4644-9882-4bfbc3d84f8b</thalabus:parentId>
+    <thalabus:parentLabel>Person</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>person_key</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>Corpus person ID. Stable key for re-linking contributor and vote records.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_1a98ccc0cde8">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_1a98ccc0cde8</thalabus:entityId>
+    <rdfs:label>DOCUMENT_SUBJECT</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The primary topic or subject matter of the document, e.g., infrastructure projects, energy supply, or administrative inquiries.</rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Topic/label_ml">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>03b83a60-becb-4e4e-af82-ca657a17de0c</thalabus:parentId>
+    <thalabus:parentLabel>Topic</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>label_ml</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>JSON object of per-language preferred labels, e.g. {"de": "...", "fr": "...", "it": "..."}, plus the translated rm label (T10 F5/R3).</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/RelationshipOntology/Parlament/CONTRIBUTES_TO">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#ObjectProperty"/>
+    <rdfs:label>CONTRIBUTES_TO</rdfs:label>
+    <thalabus:nodeType>RelationshipOntology</thalabus:nodeType>
+    <thalabus:entityId>001c5720-b528-4fb6-a7ec-a1e7a02a9a6f</thalabus:entityId>
+    <thalabus:typeLabel>CONTRIBUTES_TO</thalabus:typeLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>A person contributed to an affair. One relationship type for all contributor roles: role_kind carries the distinction (the enum supersedes 67% of contributor rows and keeps the ontology lighter than per-role types, T13 D2).</rdfs:comment>
+    <thalabus:sourceLabels>Person</thalabus:sourceLabels>
+    <thalabus:targetLabels>Affair</thalabus:targetLabels>
+    <thalabus:hasAttribute rdf:resource="https://thalabus.io/ontology/OntologyAttribute/Parlament/CONTRIBUTES_TO/role_kind"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_794232ea8515">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_794232ea8515</thalabus:entityId>
+    <rdfs:label>DATA_REQUESTED</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>The specific data or information requested in the document (e.g., statistics, reports, figures)</rdfs:comment>
+    <thalabus:lov>STATISTICS,REPORTS,FIGURES,SURVEYS,ANALYSES</thalabus:lov>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/OntologyAttribute/Parlament/Canton/body_id">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#DatatypeProperty"/>
+    <thalabus:nodeType>OntologyAttribute</thalabus:nodeType>
+    <thalabus:parentId>9df7a738-4841-442c-8ba6-0e7ba5eda81c</thalabus:parentId>
+    <thalabus:parentLabel>Canton</thalabus:parentLabel>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <thalabus:attrName>body_id</thalabus:attrName>
+    <thalabus:attrType>string</thalabus:attrType>
+    <thalabus:attrValue>OpenParlData body id of the canton parliament (bodies.id where type=canton). Join key to the Organisation node for the legislature and to Affair.scope. Measured 26 canton bodies.</thalabus:attrValue>
+  </rdf:Description>
+  <rdf:Description rdf:about="https://thalabus.io/ontology/KeywordCategory/keyword_cat_d3ba725de7eb">
+    <rdf:type rdf:resource="http://www.w3.org/2002/07/owl#AnnotationProperty"/>
+    <thalabus:nodeType>KeywordCategory</thalabus:nodeType>
+    <thalabus:entityId>keyword_cat_d3ba725de7eb</thalabus:entityId>
+    <rdfs:label>TAXATION_ISSUE</rdfs:label>
+    <thalabus:ontologyId>Parlament</thalabus:ontologyId>
+    <rdfs:comment>Documents discussing tax implications, regulations, or legal interpretations related to specific financial transactions or business activities.</rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>

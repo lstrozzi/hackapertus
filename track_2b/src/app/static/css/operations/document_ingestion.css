@@ -12,6 +12,13 @@
 .document-ingestion .sample-document-id--none { color: #8a979c; }
 .document-ingestion .sample-document-metadata { color: #56676e; font-size: .82rem; white-space: nowrap; }
 .document-ingestion .sample-document-status { display: inline-block; padding: 3px 8px; border-radius: 3px; background: #e8eef0; color: #344a52; font-size: .76rem; white-space: nowrap; }
+/* Status colours reused from operations/categorization.css, so one status reads the same
+   colour in both tables. */
+.document-ingestion .sample-document-status--failed { background: #f8e3e1; color: #a13a2f; }
+.document-ingestion .sample-document-status--needscategorization { background: #fdf1dc; color: #8a6a12; }
+.document-ingestion .sample-document-status--ready { background: #e6f1ec; color: #245a45; }
+.document-ingestion .sample-document-status--notyetprocessed, .document-ingestion .sample-document-status--unknown { background: #eef2f3; color: #56676e; }
+.document-ingestion .sample-document-status-reason { display: block; margin-top: 4px; color: #a13a2f; font-size: .74rem; line-height: 1.35; white-space: normal; overflow-wrap: anywhere; }
 @media (max-width: 760px) {
 	.document-ingestion .operation-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 	.document-ingestion .sample-document-table th, .document-ingestion .sample-document-table td { padding: 8px; }

@@ -25,7 +25,12 @@ services:
     # container is created, so editing .env still needs `make run` to recreate it.
     restart: unless-stopped
     ports:
-      - "${PORT:-8000}:8000"
+      # The published GUI port, a literal here (the Makefile keeps none). On this
+      # machine :8080 and :8081 are taken by deployments unrelated to this hackathon, so
+      # this test instance publishes on :8082. TEST HOST OVERRIDE (reversible): this
+      # default was 8000 before the test instance — restore 8000 for submission.
+      # Plan SaaS overrides this below.
+      - "${PORT:-8082}:8000"
     # The platform dials the Engine API at this hostname; the guided flow's fifth screen
     # asks the very same address the platform is configured with, so the app resolves it
     # the same way the platform service does. host-gateway is Docker's name for the host's
@@ -48,9 +53,9 @@ services:
       THALABUS_UI_URL: ${THALABUS_UI_URL:-}
       THALABUS_TOKEN: ${THALABUS_TOKEN:-}
       # Own graph store: literal, so nothing outside these YAML files can redirect it.
-      # A distributed checkout without a .env always lands on the `graph` container
-      # compose owns; the SaaS overlay overrides this literal to reach a database
-      # published on the host instead (docs/RUN_PLANS.md).
+      # Both plans use this stack's own `graph` container (the SaaS overlay repeats the
+      # literal rather than overriding it), so a checkout never writes into a database
+      # that belongs to some other deployment.
       NEO4J_URI: bolt://graph:7687
       NEO4J_USER: neo4j
       NEO4J_DATABASE: neo4j
@@ -117,10 +122,22 @@ services:
       timeout: 10s
       start_period: 45s
       retries: 4
-    # No published port: the app reaches this over the compose network, which is
-    # also why the GUI is the connectivity test. To browse it instead, add
-    #   ports: ["127.0.0.1:${NEO4J_HTTP_PORT:-7474}:7474"]
-    # or query it in place:
+    # The app always reaches this over the compose network at bolt://graph:7687 (the
+    # literal NEO4J_URI above), which is why the GUI is the connectivity test. The
+    # ports below additionally publish it on 127.0.0.1 ONLY -- loopback, never a public
+    # interface -- so a developer tool (VS Code's remote port-forward, or a Neo4j
+    # Browser pointed at a forwarded port) can reach the demo graph from the host.
+    # Bound to 127.0.0.1 for two reasons: it is exactly what VS Code port-forwarding
+    # forwards (a localhost port on the remote host), and it keeps the store unreachable
+    # from the LAN, preserving the "nothing outside this stack writes here" contract.
+    # Host 7474/7687 are already held by an unrelated Neo4j, so these use 17474/17687.
+    # Non-secret defaults are literals, per the configuration contract; the ${} names let
+    # `make run NEO4J_HTTP_PORT=…` move them without editing this file.
+    # Reversible: remove this whole block to return to "no published port".
+    ports:
+      - "127.0.0.1:${NEO4J_HTTP_PORT:-17474}:7474"   # Neo4j Browser / HTTP endpoint
+      - "127.0.0.1:${NEO4J_BOLT_PORT:-17687}:7687"   # Bolt driver endpoint
+    # In-place alternative (needs no published port):
     #   docker compose exec graph cypher-shell -a bolt://localhost:7687 -u neo4j
 
 volumes:

@@ -184,7 +184,7 @@ What still follows and is **not yet settled**:
 ```sh
 make run                 # Plan Local — full local stack (submitted path)
 make run PLAN=SaaS       # Plan SaaS — app + its own graph store, remote platform
-make health              # app health + resolved platform status (pass the same PORT)
+make health              # app health + resolved platform status (add the same PLAN you ran)
 make logs                # follow the app container
 make stop                # stop everything, no secrets needed
 make keys                # generate the local platform JWT key pair (git-ignored)
