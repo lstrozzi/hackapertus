@@ -100,6 +100,7 @@ services:
   graph:
     image: ${NEO4J_IMAGE:-neo4j:5-community}
     container_name: hackathon-neo4j
+    restart: unless-stopped
     environment:
       # Doubled underscores are required, not decoration: NEO4J_ settings map to
       # neo4j.conf by turning every underscore into a dot, so a setting whose real
