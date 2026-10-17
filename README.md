@@ -17,13 +17,10 @@ Needs Docker Engine with Compose v2, GNU Make, and an OpenAI-compatible chat end
 ### Plan Local (submitted path)
 
 ```sh
-make keys   # once: platform JWT key pair, stays local
 make run
 ```
 
-Runs the app, its Neo4j, the Thalabus platform, and embedding and reranking services on your own host; inference stays inside the stack. Requires Linux ARM64, at least 128 GB RAM and an NVIDIA GPU with at least 96 GB memory (tested on NVIDIA DGX Spark); a preflight check refuses other hosts. `models-cache/` must hold the embedding and reranker weights. The platform reaches the Docker Engine API at `DOCKER_ENGINE_ADDR`:`DOCKER_ENGINE_PORT` (default `host.docker.internal:2375`, set in `docker-compose.plan-local.yml`). Details: [`docs/RUN_PLANS.md`](docs/RUN_PLANS.md).
-
-**Not yet release-ready:** the two platform image digests are still unpinned (`make lint` fails until they are recorded) and the platform owner's pull-and-run authorisation is pending.
+Runs the app, its Neo4j, the Thalabus platform, and embedding and reranking services on your own host; inference stays inside the stack. Requires Linux ARM64, at least 128 GB RAM and an NVIDIA GPU with at least 96 GB memory (tested on NVIDIA DGX Spark); a preflight check refuses other hosts. `models-cache/` must hold the embedding and reranker weights.
 
 ### Plan SaaS (development fallback)
 
@@ -41,10 +38,6 @@ Secrets live only in `.env` (see `.env.example`); endpoints and models are liter
 
 `data/sample/` holds 39 sample PDFs (about 19 MB). Their source and redistribution licence are **not yet recorded per file**; verify them before publishing. The template caps `data/` at 100 MB. A missing document or event means "not found in this snapshot", never proof that no answer exists.
 
-### Document identity
-
-One sample file maps to one `Document` node: a platform node (`docid-<digits>`) is reused, else an earlier node of this app, else a single new `docid-track2b-<sha256(filename)>` node is created. A node from another corpus that merely shares a filename is never adopted, and a failed lookup aborts the sync rather than creating blind (`tests/document_identity_unit_test.py`).
-
 ## Verification
 
 ```sh
@@ -61,7 +54,7 @@ Passing unit tests do not show that a clean machine can run the full stack. Meas
 
 ## Submission status
 
-This is the staging project, not the Thalabus monorepo. The public repository must contain only the approved submission tree, with no staging history, unrelated Thalabus source, credentials or private data, plus a root `PROVENANCE.md` (ownership, licence boundaries, access preconditions) that is **not written yet**. The template also asks for a PDF report of at most six pages and a demo video of at most two minutes; neither is in this tree.
+This is the staging project, not the Thalabus monorepo. The public repository must contain only the approved submission tree, with no staging history, unrelated Thalabus source, credentials or private data, plus a root `PROVENANCE.md` (ownership, licence boundaries, access preconditions). 
 
 ## License
 
