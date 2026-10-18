@@ -6,7 +6,25 @@ Workspaces: **Documents** (ingest, status), **Categories** (propose, apply, exte
 
 **Built to run on your own hardware.** This application and the Thalabus platform it builds on are designed for local, on-premise installations in small data centres: no hyperscaler and no frontier LLM. Documents, the graph and inference stay on infrastructure you administer, using an open model of the Apertus class that fits on a single machine. Plan Local below is that design; Plan SaaS is only a development convenience.
 
-## Quick start
+## Very quick start
+
+Want to see the prototype working on real data without setting anything up? Skip the clone, the `.env`, the `make run`, and the potentially 24-hour human-supervised ingestion, categorisation and graph-extraction run described below, and simply visit:
+
+**<https://doc.thalabus.ai/hackathons>**
+
+There, press the **Online** badge next to *Hack Apertus Application Demo* to open a hosted instance with the sample corpus already ingested, categorised and extracted.
+
+<div align="center">
+
+[![Thalabus Hackathons hub: the Hack Apertus Application Demo is reachable online with one click](track_2b/img/Hackathon-thalabus-hub.png)](https://doc.thalabus.ai/hackathons)
+
+*<https://doc.thalabus.ai/hackathons>*
+
+</div>
+
+This is a demonstration environment with our data, not yours. Everything below still applies when you want the stack running on hardware you control.
+
+## `make run`
 
 Needs Docker Engine with Compose v2, GNU Make, and an OpenAI-compatible chat endpoint (built for the Apertus family). The app is served at <http://localhost:8000>.
 
