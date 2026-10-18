@@ -12,7 +12,7 @@ Want to see the prototype working on real data without setting anything up? Skip
 
 **<https://doc.thalabus.ai/hackathons>**
 
-There, press the **Online** badge next to *Hack Apertus Application Demo* to open a hosted instance with the sample corpus already ingested, categorised and extracted.
+There, press the **"Hack Apertus Application Demo"** link to open a hosted instance with the sample corpus already ingested, categorised and extracted.
 
 <div align="center">
 
