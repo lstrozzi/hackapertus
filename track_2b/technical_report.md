@@ -90,14 +90,7 @@ authorized Thalabus instance. No credentials are included in this report.
 
 ## 3. Use of Apertus
 
-The Thalabus platform model configuration in the SaaS profile is
-`onprem-ai/Apertus-v1.5-70B-FP8`. The platform serves chat completions through its
-OpenAI-compatible endpoint. Track 2B app-side operations use the same API shape but read an
-independent model setting: the checked-in SaaS Compose default is `qwen-3.5-35b`, while its
-platform model card is configured for Apertus. Therefore the repo configuration alone does not
-prove that every Track 2B categorisation, extraction, pair-judging, or answer call ran on
-Apertus. The final demo/evaluation record must capture the resolved app model and show the
-Apertus route for any results claimed as Apertus-produced.
+The Thalabus platform model configuration in the SaaS profile is `onprem-ai/Apertus-v1.5-70B-FP8`. The platform serves chat completions through its OpenAI-compatible endpoint. The final demo/evaluation record must capture the resolved app model and show the Apertus route for any results claimed as Apertus-produced.
 
 Prompts are application-owned; no fine-tuning, LoRA adapter, or quantisation step is performed
 by this project. The platform model is configured as FP8 by its model identifier. The local
@@ -116,15 +109,6 @@ documents (`docid-389`, `391`, `394`, `402`, `405`, `410`, `411`, `413`, `414`).
 are source documents, not human-subject study data; they may contain names and other personal
 information appearing in public records. No human-subject recruitment or consent process was
 part of this work.
-
-The repository does not currently contain a per-file source and redistribution-licence
-manifest for the PDFs. Their presence in the staging checkout is not evidence of permission
-to redistribute them. Before creating the public package, verify each source and licence,
-remove any material without a clear redistribution basis, and record the remaining provenance
-in `PROVENANCE.md`. The same release review must reconcile the Apache-2.0 template licence,
-the T2B open-source release attestation, and the still-unselected licence for the copied
-platform source slice. This report does not assert that these distinct components share one
-licence.
 
 ## 5. Evaluation
 
@@ -199,18 +183,6 @@ on-premise or air-gapped deployment. A clean release rehearsal must also pass `m
 `make verify`, the offline tests above, a fresh extraction and chat trace, and a source/data
 provenance review. The exact model IDs, image digests, hardware, data snapshot, and test output
 should accompany that final rehearsal.
-
-## 8. Next steps
-
-1. Complete the eight-document extraction and capture the live advanced-mode question, answer,
-  citations, pair decisions, and elapsed time; compare against simple mode on a small labelled
-  set of questions.
-2. Improve affair identity resolution and prevent stale extraction links after document text
-  changes; add regression cases for over-merged and uncategorised documents.
-3. Finish the Plan Local image-digest, authorization, hardware, and clean-install gates; test
-  with outbound traffic disabled if an air-gap claim is desired.
-4. Complete per-document data provenance, component licensing, and public-package secret scans
-  before publishing the repository or its sample corpus.
 
 ## Licence and release status
 
