@@ -219,13 +219,3 @@ Apache-2.0, while copied T2B platform code and the sample documents have separat
 and licensing questions. The final public package must include a reviewed `PROVENANCE.md` and
 the applicable licence decisions; until then, do not interpret this report or the staging
 repository as permission to redistribute platform code, private data, or hosted-service access.
-
-## References
-
-- [`README.md`](README.md) — product scope, run plans, operations, and packaging.
-- [`docs/RUN_PLANS.md`](docs/RUN_PLANS.md) — deployment topology, hardware, and plan constraints.
-- [`docs/CATEGORIZATION.md`](docs/CATEGORIZATION.md) — category proposal, assignment, and ontology-extension contracts.
-- [`docs/KG_EXTRACTION.md`](docs/KG_EXTRACTION.md) — extraction pipeline and persistence model.
-- [`docs/CHAT_QA.md`](docs/CHAT_QA.md) — simple and advanced retrieval, citations, and known evaluation gaps.
-- [`../../../Documentation/Documents/active/events/2026_10_HACKATHON.T34.md`](../../../Documentation/Documents/active/events/2026_10_HACKATHON.T34.md) — live case snapshot and post-T1 caption figures.
-- [`src/SLICE_PROVENANCE.md`](src/SLICE_PROVENANCE.md) — copied source scope and licensing prerequisites.
